@@ -20,21 +20,23 @@ export interface RenderState {
   isInCheck: boolean;
   currentTurn: Side;
   animating?: AnimatingPiece | null;
+  flipped?: boolean;
 }
 
 export function render(ctx: CanvasRenderingContext2D, dpr: number, dim: BoardDimensions, state: RenderState): void {
+  const flipped = state.flipped ?? false;
   ctx.save();
   ctx.scale(dpr, dpr);
 
   drawBoardBackground(ctx, dim);
   drawGrid(ctx, dim);
-  drawStarMarkers(ctx, dim);
+  drawStarMarkers(ctx, dim, flipped);
   drawRiverText(ctx, dim);
-  drawLastMoveHighlight(ctx, dim, state.lastMove);
-  drawSelectedHighlight(ctx, dim, state.selectedPos);
-  drawLegalMoves(ctx, dim, state.legalMoves);
-  drawCheckHighlight(ctx, dim, state.board, state.isInCheck, state.currentTurn);
-  drawPieces(ctx, dim, state.board, state.animating || null);
+  drawLastMoveHighlight(ctx, dim, state.lastMove, flipped);
+  drawSelectedHighlight(ctx, dim, state.selectedPos, flipped);
+  drawLegalMoves(ctx, dim, state.legalMoves, flipped);
+  drawCheckHighlight(ctx, dim, state.board, state.isInCheck, state.currentTurn, flipped);
+  drawPieces(ctx, dim, state.board, state.animating || null, flipped);
 
   if (state.animating) {
     drawSinglePiece(ctx, dim, state.animating.piece, state.animating.x, state.animating.y, true);
@@ -149,29 +151,30 @@ function drawPalaceDiagonals(ctx: CanvasRenderingContext2D, x: number, y: number
   ctx.stroke();
 }
 
-function drawStarMarkers(ctx: CanvasRenderingContext2D, dim: BoardDimensions): void {
+function drawStarMarkers(ctx: CanvasRenderingContext2D, dim: BoardDimensions, flipped: boolean): void {
   const stars: Position[] = [
     { row: 2, col: 1 }, { row: 2, col: 7 },
     { row: 3, col: 0 }, { row: 3, col: 2 }, { row: 3, col: 4 }, { row: 3, col: 6 }, { row: 3, col: 8 },
     { row: 6, col: 0 }, { row: 6, col: 2 }, { row: 6, col: 4 }, { row: 6, col: 6 }, { row: 6, col: 8 },
     { row: 7, col: 1 }, { row: 7, col: 7 },
   ];
-  for (const pos of stars) drawStar(ctx, pos, dim);
+  for (const pos of stars) drawStar(ctx, pos, dim, flipped);
 }
 
-function drawStar(ctx: CanvasRenderingContext2D, pos: Position, dim: BoardDimensions): void {
-  const { x, y } = boardToPixel(pos, dim);
+function drawStar(ctx: CanvasRenderingContext2D, pos: Position, dim: BoardDimensions, flipped: boolean): void {
+  const { x, y } = boardToPixel(pos, dim, flipped);
   const s = dim.starSize;
   const gap = Math.max(2, Math.floor(s * 0.75));
   ctx.strokeStyle = THEME.lineColor;
   ctx.lineWidth = 1;
 
+  const visualCol = flipped ? 8 - pos.col : pos.col;
   const segs: [number, number, number, number][] = [];
-  if (pos.col > 0) {
+  if (visualCol > 0) {
     segs.push([x - gap - s, y - gap, x - gap, y - gap], [x - gap, y - gap - s, x - gap, y - gap]);
     segs.push([x - gap - s, y + gap, x - gap, y + gap], [x - gap, y + gap + s, x - gap, y + gap]);
   }
-  if (pos.col < 8) {
+  if (visualCol < 8) {
     segs.push([x + gap + s, y - gap, x + gap, y - gap], [x + gap, y - gap - s, x + gap, y - gap]);
     segs.push([x + gap + s, y + gap, x + gap, y + gap], [x + gap, y + gap + s, x + gap, y + gap]);
   }
@@ -191,10 +194,10 @@ function drawRiverText(ctx: CanvasRenderingContext2D, dim: BoardDimensions): voi
   ctx.fillText(THEME.riverText, x, y);
 }
 
-function drawLastMoveHighlight(ctx: CanvasRenderingContext2D, dim: BoardDimensions, lastMove: Move | null): void {
+function drawLastMoveHighlight(ctx: CanvasRenderingContext2D, dim: BoardDimensions, lastMove: Move | null, flipped: boolean): void {
   if (!lastMove) return;
   for (const pos of [lastMove.from, lastMove.to]) {
-    const { x, y } = boardToPixel(pos, dim);
+    const { x, y } = boardToPixel(pos, dim, flipped);
     ctx.fillStyle = THEME.lastMoveColor;
     ctx.beginPath();
     ctx.arc(x, y, dim.pieceRadius + 3, 0, Math.PI * 2);
@@ -202,18 +205,18 @@ function drawLastMoveHighlight(ctx: CanvasRenderingContext2D, dim: BoardDimensio
   }
 }
 
-function drawSelectedHighlight(ctx: CanvasRenderingContext2D, dim: BoardDimensions, selected: Position | null): void {
+function drawSelectedHighlight(ctx: CanvasRenderingContext2D, dim: BoardDimensions, selected: Position | null, flipped: boolean): void {
   if (!selected) return;
-  const { x, y } = boardToPixel(selected, dim);
+  const { x, y } = boardToPixel(selected, dim, flipped);
   ctx.fillStyle = THEME.selectedColor;
   ctx.beginPath();
   ctx.arc(x, y, dim.pieceRadius + 4, 0, Math.PI * 2);
   ctx.fill();
 }
 
-function drawLegalMoves(ctx: CanvasRenderingContext2D, dim: BoardDimensions, moves: Position[]): void {
+function drawLegalMoves(ctx: CanvasRenderingContext2D, dim: BoardDimensions, moves: Position[], flipped: boolean): void {
   for (const pos of moves) {
-    const { x, y } = boardToPixel(pos, dim);
+    const { x, y } = boardToPixel(pos, dim, flipped);
     // 3D dot with gradient
     const grad = ctx.createRadialGradient(x - 1, y - 1, 0, x, y, dim.legalMoveRadius);
     grad.addColorStop(0, 'rgba(46, 204, 113, 0.8)');
@@ -225,11 +228,11 @@ function drawLegalMoves(ctx: CanvasRenderingContext2D, dim: BoardDimensions, mov
   }
 }
 
-function drawCheckHighlight(ctx: CanvasRenderingContext2D, dim: BoardDimensions, board: Board, inCheck: boolean, turn: Side): void {
+function drawCheckHighlight(ctx: CanvasRenderingContext2D, dim: BoardDimensions, board: Board, inCheck: boolean, turn: Side, flipped: boolean): void {
   if (!inCheck) return;
   const kingPos = findKing(board, turn);
   if (!kingPos) return;
-  const { x, y } = boardToPixel(kingPos, dim);
+  const { x, y } = boardToPixel(kingPos, dim, flipped);
   const grad = ctx.createRadialGradient(x, y, dim.pieceRadius * 0.5, x, y, dim.pieceRadius + 8);
   grad.addColorStop(0, 'rgba(231, 76, 60, 0.6)');
   grad.addColorStop(1, 'rgba(231, 76, 60, 0)');
@@ -239,13 +242,13 @@ function drawCheckHighlight(ctx: CanvasRenderingContext2D, dim: BoardDimensions,
   ctx.fill();
 }
 
-function drawPieces(ctx: CanvasRenderingContext2D, dim: BoardDimensions, board: Board, animating: AnimatingPiece | null): void {
+function drawPieces(ctx: CanvasRenderingContext2D, dim: BoardDimensions, board: Board, animating: AnimatingPiece | null, flipped: boolean): void {
   for (let row = 0; row < 10; row++) {
     for (let col = 0; col < 9; col++) {
       const piece = board[row][col];
       if (!piece) continue;
       if (animating && row === animating.toPos.row && col === animating.toPos.col) continue;
-      const { x, y } = boardToPixel({ row, col }, dim);
+      const { x, y } = boardToPixel({ row, col }, dim, flipped);
       drawSinglePiece(ctx, dim, piece, x, y, false);
     }
   }

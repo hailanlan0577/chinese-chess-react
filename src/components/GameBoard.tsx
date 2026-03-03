@@ -12,9 +12,10 @@ interface GameBoardProps {
   disabled?: boolean;
   pendingAnimation: Move | null;
   onAnimationDone: () => void;
+  flipped?: boolean;
 }
 
-export default function GameBoard({ renderState, onCellClick, disabled, pendingAnimation, onAnimationDone }: GameBoardProps) {
+export default function GameBoard({ renderState, onCellClick, disabled, pendingAnimation, onAnimationDone, flipped = false }: GameBoardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dprRef = useRef(window.devicePixelRatio || 1);
@@ -47,9 +48,9 @@ export default function GameBoard({ renderState, onCellClick, disabled, pendingA
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const state: RenderState = { ...renderState, animating: animatingRef.current };
+    const state: RenderState = { ...renderState, animating: animatingRef.current, flipped };
     render(ctx, dprRef.current, dimRef.current, state);
-  }, [renderState, containerWidth]);
+  }, [renderState, containerWidth, flipped]);
 
   // Run animation when pendingAnimation changes
   useEffect(() => {
@@ -57,8 +58,8 @@ export default function GameBoard({ renderState, onCellClick, disabled, pendingA
 
     const move = pendingAnimation;
     const dim = dimRef.current;
-    const fromPx = boardToPixel(move.from, dim);
-    const toPx = boardToPixel(move.to, dim);
+    const fromPx = boardToPixel(move.from, dim, flipped);
+    const toPx = boardToPixel(move.to, dim, flipped);
     const piece = move.piece;
     const startTime = performance.now();
 
@@ -96,7 +97,7 @@ export default function GameBoard({ renderState, onCellClick, disabled, pendingA
         animatingRef.current = null;
       }
     };
-  }, [pendingAnimation, containerWidth, drawFrame, onAnimationDone]);
+  }, [pendingAnimation, containerWidth, drawFrame, onAnimationDone, flipped]);
 
   // Resize canvas & redraw when state or size changes (but not during animation)
   useEffect(() => {
@@ -129,10 +130,10 @@ export default function GameBoard({ renderState, onCellClick, disabled, pendingA
       const scaleY = canvas.height / rect.height;
       const x = (e.clientX - rect.left) * scaleX;
       const y = (e.clientY - rect.top) * scaleY;
-      const pos = pixelToBoard(x, y, dprRef.current, dimRef.current);
+      const pos = pixelToBoard(x, y, dprRef.current, dimRef.current, flipped);
       if (pos) onCellClick(pos);
     },
-    [onCellClick, disabled]
+    [onCellClick, disabled, flipped]
   );
 
   return (

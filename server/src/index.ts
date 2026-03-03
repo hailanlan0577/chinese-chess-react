@@ -2,6 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+import { handleConnection } from './socket-handlers.js';
 
 const app = express();
 app.use(cors());
@@ -17,10 +18,7 @@ const io = new Server(httpServer, {
   pingInterval: 10000,
 });
 
-io.on('connection', (socket) => {
-  console.log(`Connected: ${socket.id}`);
-  socket.on('disconnect', () => console.log(`Disconnected: ${socket.id}`));
-});
+io.on('connection', (socket) => handleConnection(io, socket));
 
 const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => console.log(`Server on :${PORT}`));

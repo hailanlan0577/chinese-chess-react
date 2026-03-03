@@ -9,6 +9,7 @@ import GameStatus from './components/GameStatus';
 import CapturedPieces from './components/CapturedPieces';
 import ModeSelector from './components/ModeSelector';
 import OnlineGame from './components/OnlineGame';
+import GameRecords from './components/GameRecords';
 import './App.css';
 
 const LEVEL_LABELS: Record<Level, string> = {
@@ -45,7 +46,7 @@ function LevelSelector({ label, value, onChange, disabled }: {
   );
 }
 
-type AppMode = 'menu' | 'offline' | 'online';
+type AppMode = 'menu' | 'offline' | 'online' | 'records';
 
 function App() {
   const [mode, setMode] = useState<AppMode>('menu');
@@ -69,9 +70,9 @@ function App() {
     toggleRedAutoPlay,
   } = useGame();
 
-  // Connect socket when entering online mode
+  // Connect socket when entering online or records mode
   useEffect(() => {
-    if (mode === 'online') {
+    if (mode === 'online' || mode === 'records') {
       const s = connectSocket();
       setSocket(s);
       return () => {
@@ -90,6 +91,7 @@ function App() {
         <ModeSelector
           onSelectOffline={() => setMode('offline')}
           onSelectOnline={() => setMode('online')}
+          onSelectRecords={() => setMode('records')}
         />
         <p className="footer">此游戏由海哥用 Claude Code 开发</p>
       </div>
@@ -101,6 +103,16 @@ function App() {
     return (
       <div className="app">
         <OnlineGame socket={socket} onBack={() => setMode('menu')} />
+        <p className="footer">此游戏由海哥用 Claude Code 开发</p>
+      </div>
+    );
+  }
+
+  // Records mode
+  if (mode === 'records' && socket) {
+    return (
+      <div className="app">
+        <GameRecords socket={socket} onBack={() => setMode('menu')} />
         <p className="footer">此游戏由海哥用 Claude Code 开发</p>
       </div>
     );

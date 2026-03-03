@@ -689,3 +689,130 @@ body {
     gap: 16px;
   }
 }
+
+/* Game Records */
+.game-records {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.game-records h2 {
+  font-size: 24px;
+  color: #f0d48a;
+  text-shadow: 0 1px 0 #c9a84c, 0 2px 0 #b8973e;
+  letter-spacing: 3px;
+}
+
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.record-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.record-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.record-players {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.record-red { color: #e06060; }
+.record-black { color: #4a4a5e; }
+.record-vs { color: #6b7b8d; font-size: 12px; }
+
+.record-info {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: #8896a6;
+}
+
+.result-red { color: #e06060; font-weight: bold; }
+.result-black { color: #8896a6; font-weight: bold; }
+.result-draw-text { color: #fbbf24; font-weight: bold; }
+
+/* Game Replay */
+.game-replay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.game-replay h2 {
+  font-size: 24px;
+  color: #f0d48a;
+  text-shadow: 0 1px 0 #c9a84c, 0 2px 0 #b8973e;
+  letter-spacing: 3px;
+}
+
+.replay-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.replay-result {
+  color: #fbbf24;
+  margin-left: 8px;
+}
+
+.replay-progress {
+  font-size: 14px;
+  color: #8896a6;
+}
+
+.replay-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.replay-btn {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(180deg, #f0d48a 0%, #d4a84e 50%, #c49a3f 100%);
+  color: #3d2200;
+  font-weight: bold;
+  transition: all 0.15s;
+  box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.replay-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f5dfa0 0%, #e0b860 50%, #d0a548 100%);
+}
+
+.replay-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

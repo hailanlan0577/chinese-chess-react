@@ -161,8 +161,78 @@ body {
   cursor: not-allowed;
 }
 
-/* 3D Difficulty Selector */
-.difficulty-selector {
+/* Auto-play button */
+.auto-play-btn {
+  padding: 9px 22px;
+  font-size: 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(180deg, #7c8fa8 0%, #5a6d82 50%, #4d5f72 100%);
+  color: #e0e8f0;
+  font-weight: bold;
+  transition: all 0.15s;
+  box-shadow:
+    0 3px 0 #3d4f60,
+    0 4px 8px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+  position: relative;
+  top: 0;
+}
+
+.auto-play-btn:hover {
+  background: linear-gradient(180deg, #8fa0b5 0%, #6a7d92 50%, #5d6f82 100%);
+  top: -1px;
+  box-shadow:
+    0 4px 0 #3d4f60,
+    0 6px 12px rgba(0,0,0,0.35);
+}
+
+.auto-play-btn:active {
+  top: 2px;
+  box-shadow:
+    0 1px 0 #3d4f60,
+    0 2px 4px rgba(0,0,0,0.25);
+}
+
+.auto-play-btn.auto-play-active {
+  background: linear-gradient(180deg, #e07050 0%, #c0503a 50%, #a84030 100%);
+  color: #fff;
+  box-shadow:
+    0 3px 0 #7a2820,
+    0 4px 8px rgba(0,0,0,0.3);
+}
+
+.auto-play-btn.auto-play-active:hover {
+  background: linear-gradient(180deg, #e88070 0%, #d0604a 50%, #b85040 100%);
+  box-shadow:
+    0 4px 0 #7a2820,
+    0 6px 12px rgba(0,0,0,0.35);
+}
+
+/* Level Selectors */
+.level-selectors {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  align-items: center;
+}
+
+.level-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.level-label {
+  font-size: 13px;
+  color: #8896a6;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.level-buttons {
   display: flex;
   gap: 3px;
   background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 100%);

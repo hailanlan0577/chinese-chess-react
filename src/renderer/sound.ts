@@ -1,3 +1,5 @@
+import { type Move, Side, PieceType } from '../engine/types';
+
 let audioCtx: AudioContext | null = null;
 
 function getCtx(): AudioContext {
@@ -94,4 +96,85 @@ export function playGameOver() {
   playTone(220, 0.6, 'sine', 0.15);
   playTone(330, 0.6, 'sine', 0.1);
   playTone(440, 0.6, 'sine', 0.08);
+}
+
+/* ─── 走法语音播报 ─── */
+
+const RED_COL_NAMES = '九八七六五四三二一';
+const BLACK_COL_NAMES = '１２３４５６７８９';
+const RED_NUMBERS = '一二三四五六七八九';
+const BLACK_NUMBERS = '１２３４５６７８９';
+
+const PIECE_NAMES_RED: Record<PieceType, string> = {
+  [PieceType.KING]: '帅',
+  [PieceType.ADVISOR]: '仕',
+  [PieceType.ELEPHANT]: '相',
+  [PieceType.HORSE]: '马',
+  [PieceType.ROOK]: '车',
+  [PieceType.CANNON]: '炮',
+  [PieceType.PAWN]: '兵',
+};
+
+const PIECE_NAMES_BLACK: Record<PieceType, string> = {
+  [PieceType.KING]: '将',
+  [PieceType.ADVISOR]: '士',
+  [PieceType.ELEPHANT]: '象',
+  [PieceType.HORSE]: '马',
+  [PieceType.ROOK]: '车',
+  [PieceType.CANNON]: '炮',
+  [PieceType.PAWN]: '卒',
+};
+
+function isStraightLine(type: PieceType): boolean {
+  return type === PieceType.ROOK || type === PieceType.CANNON
+    || type === PieceType.PAWN || type === PieceType.KING;
+}
+
+/** 使用 Web Speech API 播报中国象棋记谱法，如"炮五进八" */
+export function speakMove(move: Move) {
+  const isRed = move.piece.side === Side.RED;
+  const colNames = isRed ? RED_COL_NAMES : BLACK_COL_NAMES;
+  const numbers = isRed ? RED_NUMBERS : BLACK_NUMBERS;
+  const pieceNames = isRed ? PIECE_NAMES_RED : PIECE_NAMES_BLACK;
+
+  const pieceName = pieceNames[move.piece.type];
+  const fromCol = colNames[move.from.col];
+  const rowDiff = move.to.row - move.from.row;
+
+  let direction: string;
+  let target: string;
+
+  if (rowDiff === 0) {
+    // 平移
+    direction = '平';
+    target = colNames[move.to.col];
+  } else {
+    // 红方 row 变小=进；黑方 row 变大=进
+    const isForward = isRed ? rowDiff < 0 : rowDiff > 0;
+    direction = isForward ? '进' : '退';
+
+    if (isStraightLine(move.piece.type)) {
+      // 直线子用步数
+      target = numbers[Math.abs(rowDiff) - 1];
+    } else {
+      // 斜线子（马、士、象）用目标列号
+      target = colNames[move.to.col];
+    }
+  }
+
+  const notation = `${pieceName}${fromCol}${direction}${target}`;
+
+  try {
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(notation);
+    utterance.lang = 'zh-CN';
+    utterance.rate = 1.1;
+    utterance.volume = 0.8;
+    const voices = speechSynthesis.getVoices();
+    const zhVoice = voices.find(v => v.lang.startsWith('zh'));
+    if (zhVoice) utterance.voice = zhVoice;
+    speechSynthesis.speak(utterance);
+  } catch {
+    // Speech synthesis not available
+  }
 }

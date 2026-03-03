@@ -9,11 +9,11 @@ import {
 import { createInitialGameState, makeMove, undoMove, getLegalMovesFor } from '../engine/game';
 import type { RenderState } from '../renderer/canvas';
 import { AIPlayer } from '../ai';
-import { playSelect, playMove, playCapture, playCheck, playGameOver } from '../renderer/sound';
+import { playSelect, playMove, playCapture, playCheck, playGameOver, speakMove } from '../renderer/sound';
 
-export type Difficulty = 'easy' | 'medium' | 'hard' | 'insane';
+export type Level = 'easy' | 'medium' | 'hard' | 'insane';
 
-const DIFFICULTY_TIME: Record<Difficulty, number> = {
+const LEVEL_TIME: Record<Level, number> = {
   easy: 1000,
   medium: 2000,
   hard: 3000,
@@ -27,9 +27,24 @@ export function useGame() {
   const [isAIThinking, setIsAIThinking] = useState(false);
   const [pendingAnimation, setPendingAnimation] = useState<Move | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+
+  const [redLevel, setRedLevel] = useState<Level>('medium');
+  const [blackLevel, setBlackLevel] = useState<Level>('medium');
+  const [redAutoPlay, setRedAutoPlay] = useState(false);
+
   const aiRef = useRef<AIPlayer | null>(null);
   const pendingStateRef = useRef<{ state: GameState; move: Move } | null>(null);
+
+  // Refs for use in stable callbacks (avoid stale closures)
+  const redAutoPlayRef = useRef(redAutoPlay);
+  const redLevelRef = useRef(redLevel);
+  const blackLevelRef = useRef(blackLevel);
+  const gameStateRef = useRef(gameState);
+
+  redAutoPlayRef.current = redAutoPlay;
+  redLevelRef.current = redLevel;
+  blackLevelRef.current = blackLevel;
+  gameStateRef.current = gameState;
 
   useEffect(() => {
     aiRef.current = new AIPlayer();
@@ -53,21 +68,48 @@ export function useGame() {
     } else {
       playMove();
     }
+    speakMove(move);
   }, []);
 
-  const applyMoveWithAnimation = useCallback((state: GameState, move: Move, onDone: (nextState: GameState) => void) => {
-    const nextState = makeMove(state, move);
-    if (!nextState) return;
+  const triggerAI = useCallback(async (state: GameState) => {
+    if (state.status !== GameStatus.PLAYING) return;
+    if (!aiRef.current) return;
 
-    // Store the result to apply after animation
-    pendingStateRef.current = { state: nextState, move };
-    // Start animation on the OLD board (piece flies from -> to)
-    setPendingAnimation(move);
-    setIsAnimating(true);
+    const side = state.currentTurn;
+    // Only trigger AI for black, or for red when auto-play is on
+    if (side === Side.RED && !redAutoPlayRef.current) return;
 
-    // The callback will be called from onAnimationDone
-    pendingStateRef.current = { state: nextState, move };
-    (pendingStateRef as any)._onDone = onDone;
+    const level = side === Side.RED ? redLevelRef.current : blackLevelRef.current;
+    const timeLimit = LEVEL_TIME[level];
+
+    setIsAIThinking(true);
+    try {
+      const aiMove = await aiRef.current.findBestMove(state.board, side, timeLimit);
+      if (aiMove) {
+        const nextState = makeMove(state, aiMove);
+        if (nextState) {
+          pendingStateRef.current = { state: nextState, move: aiMove };
+          (pendingStateRef as any)._onDone = (ns: GameState) => {
+            // Keep isAIThinking true if the next side also needs AI
+            const willContinue = ns.status === GameStatus.PLAYING &&
+              (ns.currentTurn === Side.BLACK || redAutoPlayRef.current);
+            if (!willContinue) {
+              setIsAIThinking(false);
+            }
+            if (ns.status === GameStatus.PLAYING) {
+              setTimeout(() => triggerAI(ns), 50);
+            }
+          };
+          setPendingAnimation(aiMove);
+          setIsAnimating(true);
+          return;
+        }
+      }
+    } catch {
+      // AI error
+    }
+    setIsAIThinking(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onAnimationDone = useCallback(() => {
@@ -87,36 +129,8 @@ export function useGame() {
     if (onDone) onDone(nextState);
   }, [playSoundForMove]);
 
-  const triggerAI = useCallback(async (state: GameState) => {
-    if (state.status !== GameStatus.PLAYING) return;
-    if (state.currentTurn !== Side.BLACK) return;
-    if (!aiRef.current) return;
-
-    setIsAIThinking(true);
-    try {
-      const timeLimit = DIFFICULTY_TIME[difficulty];
-      const aiMove = await aiRef.current.findBestMove(state.board, Side.BLACK, timeLimit);
-      if (aiMove) {
-        // Animate AI move
-        const nextState = makeMove(state, aiMove);
-        if (nextState) {
-          pendingStateRef.current = { state: nextState, move: aiMove };
-          (pendingStateRef as any)._onDone = () => {
-            setIsAIThinking(false);
-          };
-          setPendingAnimation(aiMove);
-          setIsAnimating(true);
-          return; // AI thinking ends after animation
-        }
-      }
-    } catch {
-      // AI error
-    }
-    setIsAIThinking(false);
-  }, [difficulty]);
-
   const handleCellClick = useCallback((pos: Position) => {
-    if (isAnimating || isAIThinking) return;
+    if (isAnimating || isAIThinking || redAutoPlayRef.current) return;
 
     setGameState(prev => {
       if (prev.status !== GameStatus.PLAYING) return prev;
@@ -161,13 +175,23 @@ export function useGame() {
   }, [selectedPos, legalMoves, isAIThinking, isAnimating, triggerAI]);
 
   const handleNewGame = useCallback(() => {
-    setGameState(createInitialGameState());
+    aiRef.current?.terminate();
+    aiRef.current = new AIPlayer();
+
+    const newState = createInitialGameState();
+    setGameState(newState);
     setSelectedPos(null);
     setLegalMoves([]);
     setIsAIThinking(false);
     setPendingAnimation(null);
     setIsAnimating(false);
-  }, []);
+    pendingStateRef.current = null;
+    (pendingStateRef as any)._onDone = undefined;
+
+    if (redAutoPlayRef.current) {
+      setTimeout(() => triggerAI(newState), 100);
+    }
+  }, [triggerAI]);
 
   const handleUndo = useCallback(() => {
     if (isAIThinking || isAnimating) return;
@@ -184,6 +208,21 @@ export function useGame() {
       return prev;
     });
   }, [isAIThinking, isAnimating]);
+
+  const toggleRedAutoPlay = useCallback(() => {
+    setRedAutoPlay(prev => !prev);
+  }, []);
+
+  // When redAutoPlay is enabled, trigger AI if it's red's turn
+  useEffect(() => {
+    if (redAutoPlay && !isAIThinking && !isAnimating) {
+      const gs = gameStateRef.current;
+      if (gs.currentTurn === Side.RED && gs.status === GameStatus.PLAYING) {
+        triggerAI(gs);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [redAutoPlay]);
 
   const renderState: RenderState = {
     board: gameState.board,
@@ -204,7 +243,11 @@ export function useGame() {
     handleCellClick,
     handleNewGame,
     handleUndo,
-    difficulty,
-    setDifficulty,
+    redLevel,
+    setRedLevel,
+    blackLevel,
+    setBlackLevel,
+    redAutoPlay,
+    toggleRedAutoPlay,
   };
 }

@@ -5,9 +5,12 @@ interface GameStatusProps {
   currentTurn: Side;
   isInCheck: boolean;
   isAIThinking: boolean;
+  redAutoPlay: boolean;
 }
 
-export default function GameStatus({ status, currentTurn, isInCheck, isAIThinking }: GameStatusProps) {
+export default function GameStatus({
+  status, currentTurn, isInCheck, isAIThinking, redAutoPlay,
+}: GameStatusProps) {
   let message: string;
   let className = 'game-status';
 
@@ -20,6 +23,9 @@ export default function GameStatus({ status, currentTurn, isInCheck, isAIThinkin
   } else if (status === Status.DRAW) {
     message = '和棋';
     className += ' status-draw';
+  } else if (redAutoPlay) {
+    message = '电脑对弈中...';
+    className += ' status-thinking';
   } else if (isAIThinking) {
     message = '电脑思考中...';
     className += ' status-thinking';

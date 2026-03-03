@@ -1,9 +1,14 @@
+import { useState, useEffect } from 'react';
 import { GameStatus as Status } from './engine/types';
 import { useGame, type Level } from './hooks/useGame';
+import { connectSocket, disconnectSocket } from './network/socket';
+import type { TypedSocket } from './network/socket';
 import GameBoard from './components/GameBoard';
 import GameControls from './components/GameControls';
 import GameStatus from './components/GameStatus';
 import CapturedPieces from './components/CapturedPieces';
+import ModeSelector from './components/ModeSelector';
+import OnlineGame from './components/OnlineGame';
 import './App.css';
 
 const LEVEL_LABELS: Record<Level, string> = {
@@ -40,7 +45,12 @@ function LevelSelector({ label, value, onChange, disabled }: {
   );
 }
 
+type AppMode = 'menu' | 'offline' | 'online';
+
 function App() {
+  const [mode, setMode] = useState<AppMode>('menu');
+  const [socket, setSocket] = useState<TypedSocket | null>(null);
+
   const {
     gameState,
     renderState,
@@ -59,8 +69,44 @@ function App() {
     toggleRedAutoPlay,
   } = useGame();
 
+  // Connect socket when entering online mode
+  useEffect(() => {
+    if (mode === 'online') {
+      const s = connectSocket();
+      setSocket(s);
+      return () => {
+        disconnectSocket();
+        setSocket(null);
+      };
+    }
+  }, [mode]);
+
   const isGameOver = gameState.status !== Status.PLAYING;
 
+  // Main menu
+  if (mode === 'menu') {
+    return (
+      <div className="app">
+        <ModeSelector
+          onSelectOffline={() => setMode('offline')}
+          onSelectOnline={() => setMode('online')}
+        />
+        <p className="footer">此游戏由海哥用 Claude Code 开发</p>
+      </div>
+    );
+  }
+
+  // Online mode
+  if (mode === 'online' && socket) {
+    return (
+      <div className="app">
+        <OnlineGame socket={socket} onBack={() => setMode('menu')} />
+        <p className="footer">此游戏由海哥用 Claude Code 开发</p>
+      </div>
+    );
+  }
+
+  // Offline mode (default)
   return (
     <div className="app">
       <h1 className="title">中国象棋</h1>
@@ -105,7 +151,14 @@ function App() {
         />
       </div>
       <CapturedPieces moveHistory={gameState.moveHistory} />
-      <p className="footer">此游戏由海哥用 Claude Code 半小时开发</p>
+      <button
+        className="lobby-btn secondary"
+        style={{ marginTop: 4 }}
+        onClick={() => setMode('menu')}
+      >
+        返回主菜单
+      </button>
+      <p className="footer">此游戏由海哥用 Claude Code 开发</p>
     </div>
   );
 }

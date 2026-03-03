@@ -329,6 +329,346 @@ body {
   color: rgba(255,255,255,0.25);
 }
 
+/* Mode Selector */
+.mode-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding-top: 60px;
+}
+
+.mode-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mode-btn {
+  padding: 14px 48px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: linear-gradient(180deg, #f0d48a 0%, #d4a84e 50%, #c49a3f 100%);
+  color: #3d2200;
+  font-weight: bold;
+  transition: all 0.15s;
+  box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  position: relative;
+  top: 0;
+  letter-spacing: 2px;
+}
+
+.mode-btn:hover {
+  background: linear-gradient(180deg, #f5dfa0 0%, #e0b860 50%, #d0a548 100%);
+  top: -1px;
+  box-shadow: 0 4px 0 #a07830, 0 6px 12px rgba(0,0,0,0.35);
+}
+
+.mode-btn:active {
+  top: 2px;
+  box-shadow: 0 1px 0 #a07830, 0 2px 4px rgba(0,0,0,0.25);
+}
+
+/* Lobby */
+.lobby {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.lobby h2 {
+  font-size: 24px;
+  color: #f0d48a;
+  text-shadow: 0 1px 0 #c9a84c, 0 2px 0 #b8973e;
+  letter-spacing: 3px;
+}
+
+.lobby-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 16px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.lobby-section h3 {
+  font-size: 14px;
+  color: #8896a6;
+  margin-bottom: 4px;
+}
+
+.lobby-input {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  background: rgba(0,0,0,0.3);
+  color: #ecf0f1;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.lobby-input:focus {
+  border-color: #f0d48a;
+}
+
+.lobby-input::placeholder {
+  color: rgba(255,255,255,0.3);
+}
+
+.lobby-btn {
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(180deg, #f0d48a 0%, #d4a84e 50%, #c49a3f 100%);
+  color: #3d2200;
+  font-weight: bold;
+  transition: all 0.15s;
+  box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.lobby-btn:hover {
+  background: linear-gradient(180deg, #f5dfa0 0%, #e0b860 50%, #d0a548 100%);
+}
+
+.lobby-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lobby-btn.secondary {
+  background: linear-gradient(180deg, #7c8fa8 0%, #5a6d82 50%, #4d5f72 100%);
+  color: #e0e8f0;
+  box-shadow: 0 3px 0 #3d4f60, 0 4px 8px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.lobby-btn.danger {
+  background: linear-gradient(180deg, #e07050 0%, #c0503a 50%, #a84030 100%);
+  color: #fff;
+  box-shadow: 0 3px 0 #7a2820, 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.join-row {
+  display: flex;
+  gap: 8px;
+}
+
+.join-row .lobby-input {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.room-code-display {
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 8px;
+  color: #f0d48a;
+  text-align: center;
+  padding: 16px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(240,212,138,0.3);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.room-code-display:hover {
+  background: rgba(0,0,0,0.4);
+}
+
+.waiting-text {
+  color: #fbbf24;
+  text-align: center;
+  font-size: 16px;
+  animation: pulse 1.5s infinite;
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 14px;
+  text-align: center;
+  padding: 8px;
+  background: rgba(231,76,60,0.15);
+  border-radius: 8px;
+}
+
+/* Online Game */
+.online-game-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.draw-dialog {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(251,191,36,0.15);
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 10px;
+  color: #fbbf24;
+  font-size: 14px;
+}
+
+.disconnect-warning {
+  padding: 10px 16px;
+  background: rgba(231,76,60,0.15);
+  border: 1px solid rgba(231,76,60,0.3);
+  border-radius: 10px;
+  color: #f87171;
+  font-size: 14px;
+  text-align: center;
+}
+
+.game-over-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 100;
+}
+
+.game-over-result {
+  font-size: 28px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.result-win {
+  color: #4ade80;
+}
+
+.result-lose {
+  color: #f87171;
+}
+
+.result-draw {
+  color: #fbbf24;
+}
+
+/* Chat Panel */
+.chat-panel {
+  width: 100%;
+}
+
+.chat-toggle {
+  padding: 6px 14px;
+  font-size: 13px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.08);
+  color: #8896a6;
+  transition: all 0.15s;
+}
+
+.chat-toggle:hover {
+  background: rgba(255,255,255,0.12);
+  color: #c8d6e5;
+}
+
+.chat-messages {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.chat-message {
+  font-size: 13px;
+  color: #c8d6e5;
+  word-break: break-word;
+}
+
+.chat-sender {
+  color: #f0d48a;
+  font-weight: bold;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.chat-input-row input {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  background: rgba(0,0,0,0.3);
+  color: #ecf0f1;
+  outline: none;
+}
+
+.chat-input-row button {
+  padding: 8px 14px;
+  font-size: 13px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #f0d48a;
+  color: #3d2200;
+  font-weight: bold;
+}
+
+.chat-empty {
+  color: #4a5568;
+  font-style: italic;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Online game status */
+.online-status {
+  font-size: 16px;
+  padding: 7px 18px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.online-status .my-turn {
+  color: #4ade80;
+}
+
+.online-status .opponent-turn {
+  color: #fbbf24;
+}
+
 /* Desktop */
 @media (min-width: 600px) {
   #root {

@@ -28,6 +28,7 @@ export function useOnlineGame(socket: TypedSocket) {
   const [disconnectTimeout, setDisconnectTimeout] = useState(0);
   const [waitingForServer, setWaitingForServer] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [gameResult, setGameResult] = useState<{ result: 'red_win' | 'black_win' | 'draw'; reason: string } | null>(null);
 
   // ---- Refs ----
   const pendingStateRef = useRef<{ state: GameState; move: Move } | null>(null);
@@ -106,6 +107,7 @@ export function useOnlineGame(socket: TypedSocket) {
       setOpponentDisconnected(false);
       setChatMessages([]);
       setErrorMessage(null);
+      setGameResult(null);
       clearDisconnectTimer();
       // Suppress unused variable warning
       void me;
@@ -132,6 +134,7 @@ export function useOnlineGame(socket: TypedSocket) {
 
     const onGameOver = (data: { result: 'red_win' | 'black_win' | 'draw'; reason: string }) => {
       setPhase('finished');
+      setGameResult(data);
       playGameOver();
       clearDisconnectTimer();
     };
@@ -353,6 +356,7 @@ export function useOnlineGame(socket: TypedSocket) {
     setDisconnectTimeout(0);
     setWaitingForServer(false);
     setErrorMessage(null);
+    setGameResult(null);
     setGameState(createInitialGameState());
     setSelectedPos(null);
     setLegalMoves([]);
@@ -394,6 +398,7 @@ export function useOnlineGame(socket: TypedSocket) {
     pendingAnimation,
     waitingForServer,
     errorMessage,
+    gameResult,
     flipped,
     isMyTurn,
     // Lobby actions

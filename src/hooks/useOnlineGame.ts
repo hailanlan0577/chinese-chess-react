@@ -38,6 +38,9 @@ export function useOnlineGame(socket: TypedSocket) {
   const myColorRef = useRef(myColor);
   myColorRef.current = myColor;
 
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
+
   const disconnectTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ---- Computed ----
@@ -86,7 +89,7 @@ export function useOnlineGame(socket: TypedSocket) {
   useEffect(() => {
     if (!socket) return;
 
-    const onGameStart = (data: { room: RoomInfo; yourColor: PlayerColor }) => {
+    const onGameStart = (data: { room: RoomInfo; yourColor: PlayerColor; moves?: MovePayload[] }) => {
       setPhase('playing');
       setMyColor(data.yourColor);
       setRoomInfo(data.room);
@@ -96,7 +99,6 @@ export function useOnlineGame(socket: TypedSocket) {
       const opponent = data.room.players.find(p => p.color !== data.yourColor);
       setOpponentName(opponent?.nickname ?? null);
       // Reset game state
-      setGameState(createInitialGameState());
       setSelectedPos(null);
       setLegalMoves([]);
       setPendingAnimation(null);
@@ -111,6 +113,27 @@ export function useOnlineGame(socket: TypedSocket) {
       clearDisconnectTimer();
       // Suppress unused variable warning
       void me;
+
+      // If moves are provided (reconnection), replay them to rebuild state
+      if (data.moves && data.moves.length > 0) {
+        let state = createInitialGameState();
+        for (const mp of data.moves) {
+          const piece = state.board[mp.from.row][mp.from.col];
+          if (!piece) break;
+          const captured = state.board[mp.to.row][mp.to.col];
+          const fullMove: Move = { from: mp.from, to: mp.to, piece, captured };
+          const next = makeMove(state, fullMove);
+          if (!next) break;
+          state = next;
+        }
+        setGameState(state);
+      } else {
+        setGameState(createInitialGameState());
+      }
+
+      // Store reconnection data in sessionStorage
+      sessionStorage.setItem('chess_room_id', data.room.roomId);
+      sessionStorage.setItem('chess_player_id', socket.id ?? '');
     };
 
     const onGameMove = (data: { move: MovePayload }) => {
@@ -137,6 +160,9 @@ export function useOnlineGame(socket: TypedSocket) {
       setGameResult(data);
       playGameOver();
       clearDisconnectTimer();
+      // Clear reconnection data
+      sessionStorage.removeItem('chess_room_id');
+      sessionStorage.removeItem('chess_player_id');
     };
 
     const onDrawOffered = () => {
@@ -198,6 +224,16 @@ export function useOnlineGame(socket: TypedSocket) {
       setErrorMessage(data.message);
     };
 
+    // Auto-reconnect: when socket reconnects, attempt to rejoin active game
+    const onConnect = () => {
+      const savedRoomId = sessionStorage.getItem('chess_room_id');
+      const savedPlayerId = sessionStorage.getItem('chess_player_id');
+      if (savedRoomId && savedPlayerId && phaseRef.current === 'playing') {
+        socket.emit('reconnect:attempt', { roomId: savedRoomId, playerId: savedPlayerId });
+      }
+    };
+
+    socket.on('connect', onConnect);
     socket.on('game:start', onGameStart);
     socket.on('game:move', onGameMove);
     socket.on('game:over', onGameOver);
@@ -212,6 +248,7 @@ export function useOnlineGame(socket: TypedSocket) {
     socket.on('error', onError);
 
     return () => {
+      socket.off('connect', onConnect);
       socket.off('game:start', onGameStart);
       socket.off('game:move', onGameMove);
       socket.off('game:over', onGameOver);
@@ -364,6 +401,9 @@ export function useOnlineGame(socket: TypedSocket) {
     setIsAnimating(false);
     pendingStateRef.current = null;
     clearDisconnectTimer();
+    // Clear reconnection data
+    sessionStorage.removeItem('chess_room_id');
+    sessionStorage.removeItem('chess_player_id');
   }, [clearDisconnectTimer]);
 
   // ---- Render state ----

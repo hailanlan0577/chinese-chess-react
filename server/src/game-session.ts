@@ -55,7 +55,20 @@ class GameSessionManager {
   }
 
   getSession(roomId: string): GameSession | null { return this.sessions.get(roomId) ?? null; }
-  removeSession(roomId: string): void { this.sessions.delete(roomId); }
+  removeSession(roomId: string): void {
+    const session = this.sessions.get(roomId);
+    if (session?.disconnectTimer) {
+      clearTimeout(session.disconnectTimer);
+      session.disconnectTimer = null;
+    }
+    this.sessions.delete(roomId);
+  }
+
+  getMoves(roomId: string): MovePayload[] {
+    const session = this.sessions.get(roomId);
+    if (!session) return [];
+    return session.state.moveHistory.map(m => ({ from: m.from, to: m.to }));
+  }
 }
 
 export const gameSessionManager = new GameSessionManager();

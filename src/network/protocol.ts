@@ -62,7 +62,7 @@ export interface ServerToClientEvents {
   'room:player-joined': (data: { player: PlayerInfo; room: RoomInfo }) => void;
   'room:player-left': (data: { playerId: string }) => void;
   'match:found': (data: { roomId: string; room: RoomInfo }) => void;
-  'game:start': (data: { room: RoomInfo; yourColor: PlayerColor }) => void;
+  'game:start': (data: { room: RoomInfo; yourColor: PlayerColor; moves?: MovePayload[] }) => void;
   'game:move': (data: { move: MovePayload }) => void;
   'game:over': (data: { result: 'red_win' | 'black_win' | 'draw'; reason: string }) => void;
   'game:draw-offered': () => void;

@@ -211,7 +211,8 @@ export function handleConnection(io: IO, socket: ClientSocket) {
     const room = roomManager.getRoom(roomId);
     if (room) {
       const yourColor = socket.id === session.redPlayerId ? 'red' : 'black';
-      socket.emit('game:start', { room: roomManager.toRoomInfo(room), yourColor });
+      const moves = gameSessionManager.getMoves(roomId);
+      socket.emit('game:start', { room: roomManager.toRoomInfo(room), yourColor, moves });
       socket.to(roomId).emit('game:opponent-reconnected');
     }
   });

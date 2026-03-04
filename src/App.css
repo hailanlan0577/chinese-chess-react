@@ -491,15 +491,17 @@ body {
 
 .join-row {
   display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
 .join-row .lobby-input {
-  flex: 1;
+  width: 100%;
   text-transform: uppercase;
   letter-spacing: 3px;
   text-align: center;
   font-weight: bold;
+  box-sizing: border-box;
 }
 
 .room-code-display {

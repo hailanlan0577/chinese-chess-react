@@ -1,5 +1,5 @@
 import { Side, type Board, type Move } from '../engine/types';
-import { applyMoveInPlace, undoMoveInPlace, oppositeSide } from '../engine/board';
+import { applyMoveInPlace, undoMoveInPlace, oppositeSide, boardToKey } from '../engine/board';
 import { getAllLegalMoves } from '../engine/validation';
 import { PIECE_VALUES } from '../engine/constants';
 import { evaluate } from './evaluate';
@@ -101,11 +101,35 @@ function negamax(
   return bestScore;
 }
 
+/** Repetition penalty: mild enough that AI still repeats when no better option exists */
+const REPETITION_PENALTY = 15;
+
+/**
+ * Build a set of position keys from game history for repetition penalty.
+ */
+function buildPositionCounts(board: Board, moveHistory: Move[]): Map<string, number> {
+  const counts = new Map<string, number>();
+  const boardCopy = board.map(row => row.map(cell => cell ? { ...cell } : null));
+  const keys: string[] = [];
+  keys.push(boardToKey(boardCopy));
+
+  for (let i = moveHistory.length - 1; i >= 0; i--) {
+    undoMoveInPlace(boardCopy, moveHistory[i]);
+    keys.push(boardToKey(boardCopy));
+  }
+
+  for (const key of keys) {
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+
+  return counts;
+}
+
 /**
  * Iterative deepening search with time limit.
  * Searches deeper until time runs out (~3 seconds).
  */
-export function findBestMove(board: Board, side: Side, timeLimit?: number): Move | null {
+export function findBestMove(board: Board, side: Side, timeLimit?: number, moveHistory?: Move[]): Move | null {
   if (timeLimit) TIME_LIMIT = timeLimit;
   const moves = getAllLegalMoves(board, side);
   if (moves.length === 0) return null;
@@ -113,6 +137,11 @@ export function findBestMove(board: Board, side: Side, timeLimit?: number): Move
 
   searchStartTime = performance.now();
   timeUp = false;
+
+  // Build position counts from history for repetition penalty
+  const positionCounts = moveHistory && moveHistory.length > 0
+    ? buildPositionCounts(board, moveHistory)
+    : null;
 
   sortMoves(moves);
 
@@ -126,7 +155,17 @@ export function findBestMove(board: Board, side: Side, timeLimit?: number): Move
 
     for (const move of moves) {
       applyMoveInPlace(board, move);
-      const score = -negamax(board, oppositeSide(side), depth - 1, depth, -INF, -currentBestScore);
+      let score = -negamax(board, oppositeSide(side), depth - 1, depth, -INF, -currentBestScore);
+
+      // Apply mild penalty for positions seen before (don't block, just discourage)
+      if (positionCounts && !timeUp) {
+        const key = boardToKey(board);
+        const count = positionCounts.get(key) || 0;
+        if (count > 0) {
+          score -= REPETITION_PENALTY * count;
+        }
+      }
+
       undoMoveInPlace(board, move);
 
       if (timeUp) break;

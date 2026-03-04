@@ -68,3 +68,15 @@ export function isInBounds(row: number, col: number): boolean {
 export function oppositeSide(side: Side): Side {
   return side === Side.RED ? Side.BLACK : Side.RED;
 }
+
+/** Serialize board to a string key for repetition detection */
+export function boardToKey(board: Board): string {
+  let key = '';
+  for (let row = 0; row < BOARD_ROWS; row++) {
+    for (let col = 0; col < BOARD_COLS; col++) {
+      const piece = board[row][col];
+      key += piece ? `${piece.id},` : '.,';
+    }
+  }
+  return key;
+}

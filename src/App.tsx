@@ -10,6 +10,7 @@ import CapturedPieces from './components/CapturedPieces';
 import ModeSelector from './components/ModeSelector';
 import OnlineGame from './components/OnlineGame';
 import GameRecords from './components/GameRecords';
+import { playButtonClick } from './renderer/sound';
 import './App.css';
 
 const LEVEL_LABELS: Record<Level, string> = {
@@ -35,7 +36,7 @@ function LevelSelector({ label, value, onChange, disabled }: {
           <button
             key={l}
             className={`diff-btn ${value === l ? 'diff-active' : ''}`}
-            onClick={() => onChange(l)}
+            onClick={() => { playButtonClick(); onChange(l); }}
             disabled={disabled}
           >
             {LEVEL_LABELS[l]}
@@ -109,7 +110,7 @@ function App() {
   }
 
   // Records mode
-  if (mode === 'records' && socket) {
+  if (mode === 'records') {
     return (
       <div className="app">
         <GameRecords socket={socket} onBack={() => setMode('menu')} />
@@ -166,7 +167,7 @@ function App() {
       <button
         className="lobby-btn secondary"
         style={{ marginTop: 4 }}
-        onClick={() => setMode('menu')}
+        onClick={() => { playButtonClick(); setMode('menu'); }}
       >
         返回主菜单
       </button>

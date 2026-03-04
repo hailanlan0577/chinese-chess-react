@@ -1,15 +1,18 @@
 import { Side, GameStatus, type Board, type Move, type Position, type GameState } from './types';
-import { createInitialBoard, applyMove, oppositeSide } from './board';
+import { createInitialBoard, applyMove, oppositeSide, boardToKey } from './board';
 import { isInCheck, isCheckmate, isStalemate, getLegalMovesForPos } from './validation';
 
 export function createInitialGameState(): GameState {
   const board = createInitialBoard();
+  const key = boardToKey(board);
   return {
     board,
     currentTurn: Side.RED,
     moveHistory: [],
     status: GameStatus.PLAYING,
     isInCheck: false,
+    positionCounts: { [key]: 1 },
+    noCapturePlies: 0,
   };
 }
 
@@ -32,12 +35,26 @@ export function makeMove(state: GameState, move: Move): GameState | null {
   const nextTurn = oppositeSide(state.currentTurn);
   const inCheck = isInCheck(newBoard, nextTurn);
 
+  // Update position counts
+  const boardKey = boardToKey(newBoard);
+  const newPositionCounts = { ...state.positionCounts };
+  newPositionCounts[boardKey] = (newPositionCounts[boardKey] || 0) + 1;
+
+  // Update no-capture plies
+  const newNoCapturePlies = move.captured ? 0 : state.noCapturePlies + 1;
+
   let status = GameStatus.PLAYING;
   if (isCheckmate(newBoard, nextTurn)) {
     status = state.currentTurn === Side.RED ? GameStatus.RED_WIN : GameStatus.BLACK_WIN;
   } else if (isStalemate(newBoard, nextTurn)) {
     // In Chinese chess, stalemate is a loss for the stalemated side
     status = nextTurn === Side.RED ? GameStatus.BLACK_WIN : GameStatus.RED_WIN;
+  } else if (newPositionCounts[boardKey] >= 3) {
+    // Threefold repetition → draw
+    status = GameStatus.DRAW;
+  } else if (newNoCapturePlies >= 120) {
+    // 60 full moves (120 half-moves) without capture → draw
+    status = GameStatus.DRAW;
   }
 
   return {
@@ -46,6 +63,8 @@ export function makeMove(state: GameState, move: Move): GameState | null {
     moveHistory: [...state.moveHistory, move],
     status,
     isInCheck: inCheck,
+    positionCounts: newPositionCounts,
+    noCapturePlies: newNoCapturePlies,
   };
 }
 

@@ -1,101 +1,143 @@
 import { type Move, Side, PieceType } from '../engine/types';
 
-let audioCtx: AudioContext | null = null;
+/* ─── AudioContext 管理 ─── */
 
-function getCtx(): AudioContext {
+const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+let audioCtx: AudioContext | null = null;
+let audioUnlocked = false;
+
+/**
+ * 在第一次用户交互时解锁音频。
+ * iOS Safari / 部分 Chrome 需要在用户手势中播放一个静音 buffer 才能真正激活 AudioContext。
+ */
+function unlockAudio() {
+  if (audioUnlocked) return;
+  if (!AudioCtx) return;
+
   if (!audioCtx) {
-    audioCtx = new AudioContext();
+    audioCtx = new AudioCtx();
+  }
+
+  // 强制 resume（返回 Promise，但不需要 await，只要在手势中调用即可）
+  const p = audioCtx.resume();
+  if (p && p.then) p.then(() => { audioUnlocked = true; });
+
+  // 播放一个 1-sample 的静音 buffer，彻底解锁 iOS
+  try {
+    const buf = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    src.connect(audioCtx.destination);
+    src.start(0);
+  } catch { /* ignore */ }
+
+  audioUnlocked = true;
+}
+
+// 注册全局监听器，确保第一次点击 / 触摸就解锁
+if (typeof document !== 'undefined') {
+  const events = ['click', 'touchstart', 'touchend', 'mousedown', 'keydown'];
+  const handler = () => {
+    unlockAudio();
+    events.forEach(e => document.removeEventListener(e, handler, true));
+  };
+  events.forEach(e => document.addEventListener(e, handler, { capture: true, passive: true }));
+}
+
+function getCtx(): AudioContext | null {
+  if (!AudioCtx) return null;
+  if (!audioCtx) {
+    audioCtx = new AudioCtx();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
   }
   return audioCtx;
 }
 
-function playTone(frequency: number, duration: number, type: OscillatorType = 'sine', volume = 0.15) {
+/* ─── 基础音效 ─── */
+
+function playTone(frequency: number, duration: number, type: OscillatorType = 'sine', volume = 0.3) {
+  const ctx = getCtx();
+  if (!ctx) return;
   try {
-    const ctx = getCtx();
+    const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = type;
-    osc.frequency.value = frequency;
-    gain.gain.setValueAtTime(volume, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.frequency.setValueAtTime(frequency, now);
+    gain.gain.setValueAtTime(volume, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + duration);
+    osc.start(now);
+    osc.stop(now + duration + 0.01);
   } catch {
     // Audio not available
   }
 }
 
-/** Soft click for selecting a piece */
+function playNoise(duration: number, filterFreq: number, filterQ: number, volume: number) {
+  const ctx = getCtx();
+  if (!ctx) return;
+  try {
+    const bufferSize = Math.floor(ctx.sampleRate * duration);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      const t = i / ctx.sampleRate;
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-t / (duration * 0.3)) * volume;
+    }
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = filterFreq;
+    filter.Q.value = filterQ;
+    source.connect(filter);
+    filter.connect(ctx.destination);
+    source.start();
+  } catch {
+    // ignore
+  }
+}
+
+/* ─── 导出的音效函数 ─── */
+
+/** 选子：清脆短促点击 */
 export function playSelect() {
-  playTone(800, 0.08, 'sine', 0.1);
+  playTone(800, 0.1, 'triangle', 0.35);
 }
 
-/** Piece placed on board */
+/** UI 按钮点击 */
+export function playButtonClick() {
+  playTone(1000, 0.08, 'sine', 0.3);
+}
+
+/** 落子：木质撞击 */
 export function playMove() {
-  try {
-    const ctx = getCtx();
-    const bufferSize = ctx.sampleRate * 0.1;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    // Short noise burst simulating a wooden tap
-    for (let i = 0; i < bufferSize; i++) {
-      const t = i / ctx.sampleRate;
-      data[i] = (Math.random() * 2 - 1) * Math.exp(-t * 60) * 0.4;
-    }
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    // Bandpass filter to make it sound wooden
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 1200;
-    filter.Q.value = 1.5;
-    source.connect(filter);
-    filter.connect(ctx.destination);
-    source.start();
-  } catch {
-    // fallback
-    playTone(400, 0.1, 'triangle', 0.12);
-  }
+  playTone(200, 0.15, 'sine', 0.5);
+  playNoise(0.1, 1200, 1.5, 0.5);
 }
 
-/** Capture an enemy piece - heavier impact */
+/** 吃子：更强的撞击 + 碰撞 */
 export function playCapture() {
-  try {
-    const ctx = getCtx();
-    const bufferSize = ctx.sampleRate * 0.18;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      const t = i / ctx.sampleRate;
-      data[i] = (Math.random() * 2 - 1) * Math.exp(-t * 30) * 0.6;
-    }
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 600;
-    filter.Q.value = 1;
-    source.connect(filter);
-    filter.connect(ctx.destination);
-    source.start();
-  } catch {
-    playTone(300, 0.15, 'triangle', 0.2);
-  }
+  playTone(220, 0.18, 'sine', 0.55);
+  playTone(500, 0.1, 'square', 0.3);
+  playNoise(0.15, 600, 1, 0.6);
 }
 
-/** Check warning */
+/** 将军警告 */
 export function playCheck() {
-  playTone(880, 0.12, 'square', 0.1);
-  setTimeout(() => playTone(1100, 0.15, 'square', 0.1), 130);
+  playTone(880, 0.15, 'square', 0.25);
+  setTimeout(() => playTone(1100, 0.18, 'square', 0.25), 150);
 }
 
-/** Game over gong */
+/** 游戏结束 */
 export function playGameOver() {
-  playTone(220, 0.6, 'sine', 0.15);
-  playTone(330, 0.6, 'sine', 0.1);
-  playTone(440, 0.6, 'sine', 0.08);
+  playTone(220, 0.8, 'sine', 0.3);
+  playTone(330, 0.8, 'sine', 0.2);
+  playTone(440, 0.8, 'sine', 0.15);
 }
 
 /* ─── 走法语音播报 ─── */

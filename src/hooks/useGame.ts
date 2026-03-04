@@ -10,6 +10,9 @@ import { createInitialGameState, makeMove, undoMove, getLegalMovesFor } from '..
 import type { RenderState } from '../renderer/canvas';
 import { AIPlayer } from '../ai';
 import { playSelect, playMove, playCapture, playCheck, playGameOver, speakMove } from '../renderer/sound';
+import { saveRecord } from './useLocalRecords';
+import type { MovePayload } from '../network/protocol';
+import type { LocalGameRecord } from './useLocalRecords';
 
 export type Level = 'easy' | 'medium' | 'hard' | 'insane';
 
@@ -18,6 +21,13 @@ const LEVEL_TIME: Record<Level, number> = {
   medium: 2000,
   hard: 3000,
   insane: 8000,
+};
+
+const LEVEL_LABELS: Record<Level, string> = {
+  easy: '简单',
+  medium: '中等',
+  hard: '困难',
+  insane: '超级',
 };
 
 export function useGame() {
@@ -84,7 +94,7 @@ export function useGame() {
 
     setIsAIThinking(true);
     try {
-      const aiMove = await aiRef.current.findBestMove(state.board, side, timeLimit);
+      const aiMove = await aiRef.current.findBestMove(state.board, side, timeLimit, state.moveHistory);
       if (aiMove) {
         const nextState = makeMove(state, aiMove);
         if (nextState) {
@@ -223,6 +233,44 @@ export function useGame() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redAutoPlay]);
+
+  // Save local record when game ends
+  const prevStatusRef = useRef(gameState.status);
+  useEffect(() => {
+    const prev = prevStatusRef.current;
+    prevStatusRef.current = gameState.status;
+
+    if (prev !== GameStatus.PLAYING) return;
+    const st = gameState.status;
+    if (st === GameStatus.PLAYING) return;
+
+    const moves: MovePayload[] = gameState.moveHistory.map(m => ({
+      from: m.from,
+      to: m.to,
+    }));
+
+    const redName = redAutoPlayRef.current
+      ? `AI-${LEVEL_LABELS[redLevelRef.current]}`
+      : '玩家';
+    const blackName = `AI-${LEVEL_LABELS[blackLevelRef.current]}`;
+
+    const result = st === GameStatus.RED_WIN ? 'red_win' as const
+      : st === GameStatus.BLACK_WIN ? 'black_win' as const
+      : 'draw' as const;
+
+    const record: LocalGameRecord = {
+      id: `local_${Date.now()}`,
+      redPlayer: redName,
+      blackPlayer: blackName,
+      result,
+      reason: st === GameStatus.DRAW ? '和棋' : '将杀',
+      moveCount: moves.length,
+      date: new Date().toLocaleDateString('zh-CN'),
+      moves,
+    };
+
+    saveRecord(record);
+  }, [gameState.status, gameState.moveHistory]);
 
   const renderState: RenderState = {
     board: gameState.board,

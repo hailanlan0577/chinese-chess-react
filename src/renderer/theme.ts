@@ -63,7 +63,7 @@ export function computeDimensions(containerWidth: number): BoardDimensions {
     frameWidth,
     pieceRadius,
     pieceBorderWidth: Math.max(1.8, cellSize * 0.04),
-    pieceFont: `bold ${fontSize}px "LXGW WenKai", "KaiTi", "STKaiti", serif`,
+    pieceFont: `bold ${fontSize}px serif`,
     riverFont: `italic ${riverFontSize}px "LXGW WenKai", "KaiTi", "STKaiti", serif`,
     legalMoveRadius: Math.max(5, Math.floor(cellSize * 0.12)),
     starSize: Math.max(3, Math.floor(cellSize * 0.07)),

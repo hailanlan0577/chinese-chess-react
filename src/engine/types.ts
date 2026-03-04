@@ -47,4 +47,6 @@ export interface GameState {
   moveHistory: Move[];
   status: GameStatus;
   isInCheck: boolean;
+  positionCounts: Record<string, number>;
+  noCapturePlies: number;
 }

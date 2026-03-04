@@ -726,6 +726,14 @@ body {
   text-shadow: 0 1px 0 rgba(255,255,255,0.4);
   letter-spacing: 4px;
   font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
+  margin-bottom: 0;
+}
+
+.records-section-title {
+  font-size: 15px;
+  color: #8a6a40;
+  margin: 4px 0 0;
+  align-self: flex-start;
 }
 
 .records-list {
@@ -773,6 +781,20 @@ body {
 .result-red { color: #b03020; font-weight: bold; }
 .result-black { color: #3a3a50; font-weight: bold; }
 .result-draw-text { color: #8b6914; font-weight: bold; }
+
+.record-delete-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #c0a080;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+  line-height: 1;
+}
+.record-delete-btn:hover {
+  color: #b03020;
+}
 
 /* ============ Game Replay ============ */
 .game-replay {

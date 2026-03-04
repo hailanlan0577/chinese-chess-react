@@ -13,7 +13,7 @@ export class AIPlayer {
     return this.worker;
   }
 
-  findBestMove(board: Board, side: Side, timeLimit?: number): Promise<Move | null> {
+  findBestMove(board: Board, side: Side, timeLimit?: number, moveHistory?: Move[]): Promise<Move | null> {
     return new Promise((resolve) => {
       const worker = this.getWorker();
 
@@ -23,11 +23,11 @@ export class AIPlayer {
 
       worker.onerror = () => {
         import('./search').then(({ findBestMove }) => {
-          resolve(findBestMove(board, side, timeLimit));
+          resolve(findBestMove(board, side, timeLimit, moveHistory));
         });
       };
 
-      worker.postMessage({ board, side, timeLimit });
+      worker.postMessage({ board, side, timeLimit, moveHistory });
     });
   }
 

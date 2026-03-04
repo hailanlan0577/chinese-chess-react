@@ -1,3 +1,5 @@
+import { playButtonClick } from '../renderer/sound';
+
 interface GameControlsProps {
   onNewGame: () => void;
   onUndo: () => void;
@@ -13,15 +15,15 @@ export default function GameControls({
 }: GameControlsProps) {
   return (
     <div className="game-controls">
-      <button onClick={onNewGame} disabled={isAIThinking && !redAutoPlay}>
+      <button onClick={() => { playButtonClick(); onNewGame(); }} disabled={isAIThinking && !redAutoPlay}>
         新游戏
       </button>
-      <button onClick={onUndo} disabled={!canUndo || isAIThinking}>
+      <button onClick={() => { playButtonClick(); onUndo(); }} disabled={!canUndo || isAIThinking}>
         悔棋
       </button>
       <button
         className={`auto-play-btn ${redAutoPlay ? 'auto-play-active' : ''}`}
-        onClick={onToggleAutoPlay}
+        onClick={() => { playButtonClick(); onToggleAutoPlay(); }}
       >
         {redAutoPlay ? '取消托管' : '电脑托管'}
       </button>

@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: "KaiTi", "STKaiti", "SimSun", -apple-system, BlinkMacSystemFont, serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
   background: linear-gradient(180deg, #f5e6c8 0%, #ecdbb0 30%, #e2cfa0 60%, #d8c494 100%);
   color: #4a2810;
   min-height: 100vh;
@@ -39,7 +39,7 @@ body {
     0 1px 0 rgba(255,255,255,0.4),
     0 2px 4px rgba(90, 45, 12, 0.15);
   letter-spacing: 6px;
-  font-family: "KaiTi", "STKaiti", "FangSong", "SimSun", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
 }
 
 /* ============ Game Status - Wooden Panel ============ */
@@ -129,7 +129,7 @@ body {
   background: linear-gradient(180deg, #e8c373 0%, #d4a84e 40%, #c49a3f 100%);
   color: #5a2d0c;
   font-weight: bold;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
   box-shadow:
     0 3px 0 #a07830,
@@ -171,7 +171,7 @@ body {
   background: linear-gradient(180deg, #c8b898 0%, #b0a080 40%, #9a8a70 100%);
   color: #4a3820;
   font-weight: bold;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
   box-shadow:
     0 3px 0 #7a6a50,
@@ -244,7 +244,7 @@ body {
   background: transparent;
   color: #8a6a40;
   font-weight: bold;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
 }
 
@@ -361,7 +361,7 @@ body {
   background: linear-gradient(180deg, #eedbb0 0%, #e0c890 30%, #d4b878 60%, #c8a860 100%);
   color: #5a2d0c;
   font-weight: bold;
-  font-family: "KaiTi", "STKaiti", "FangSong", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
   box-shadow:
     0 4px 0 #a07830,
@@ -406,7 +406,7 @@ body {
   color: #5a2d0c;
   text-shadow: 0 1px 0 rgba(255,255,255,0.4);
   letter-spacing: 4px;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
 }
 
 .lobby-section {
@@ -424,7 +424,7 @@ body {
 .lobby-section h3 {
   font-size: 14px;
   color: #8a6a40;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
   margin-bottom: 2px;
 }
 
@@ -458,7 +458,7 @@ body {
   background: linear-gradient(180deg, #e8c373 0%, #d4a84e 40%, #c49a3f 100%);
   color: #5a2d0c;
   font-weight: bold;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
   box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(90, 45, 12, 0.2), inset 0 1px 0 rgba(255,255,255,0.4);
   text-shadow: 0 1px 0 rgba(255,255,255,0.3);
@@ -589,7 +589,7 @@ body {
 .game-over-result {
   font-size: 32px;
   font-weight: bold;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
   text-shadow: 0 2px 6px rgba(0,0,0,0.4);
   letter-spacing: 4px;
 }
@@ -723,7 +723,7 @@ body {
   color: #5a2d0c;
   text-shadow: 0 1px 0 rgba(255,255,255,0.4);
   letter-spacing: 4px;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
 }
 
 .records-list {
@@ -786,7 +786,7 @@ body {
   color: #5a2d0c;
   text-shadow: 0 1px 0 rgba(255,255,255,0.4);
   letter-spacing: 4px;
-  font-family: "KaiTi", "STKaiti", serif;
+  font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif;
 }
 
 .replay-info {

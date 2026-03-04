@@ -5,9 +5,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  color: #ecf0f1;
+  font-family: "KaiTi", "STKaiti", "SimSun", -apple-system, BlinkMacSystemFont, serif;
+  background: linear-gradient(180deg, #f5e6c8 0%, #ecdbb0 30%, #e2cfa0 60%, #d8c494 100%);
+  color: #4a2810;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -25,59 +25,58 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
   max-width: 560px;
 }
 
-/* 3D Title */
+/* ============ Title - Brush Calligraphy ============ */
 .title {
-  font-size: 26px;
+  font-size: 32px;
   font-weight: bold;
-  color: #f0d48a;
+  color: #5a2d0c;
   text-shadow:
-    0 1px 0 #c9a84c,
-    0 2px 0 #b8973e,
-    0 3px 6px rgba(0, 0, 0, 0.4);
-  letter-spacing: 4px;
+    0 1px 0 rgba(255,255,255,0.4),
+    0 2px 4px rgba(90, 45, 12, 0.15);
+  letter-spacing: 6px;
+  font-family: "KaiTi", "STKaiti", "FangSong", "SimSun", serif;
 }
 
-/* Game Status */
+/* ============ Game Status - Wooden Panel ============ */
 .game-status {
   font-size: 16px;
-  padding: 7px 18px;
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
-  border: 1px solid rgba(255,255,255,0.08);
+  padding: 8px 24px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #f0dbb5 0%, #e5cc9a 100%);
+  border: 1px solid #c9a86c;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.1);
+  color: #5a3000;
+  font-weight: bold;
 }
 
 .status-check {
-  background: linear-gradient(180deg, rgba(231,76,60,0.3) 0%, rgba(231,76,60,0.15) 100%);
-  border-color: rgba(231,76,60,0.3);
-  color: #f87171;
-  font-weight: bold;
+  background: linear-gradient(180deg, #f5d0c0 0%, #e8b8a0 100%);
+  border-color: #c08060;
+  color: #a03020;
 }
 
 .status-win {
-  background: linear-gradient(180deg, rgba(46,204,113,0.3) 0%, rgba(46,204,113,0.15) 100%);
-  border-color: rgba(46,204,113,0.3);
-  color: #4ade80;
-  font-weight: bold;
+  background: linear-gradient(180deg, #d0e8c0 0%, #b8d8a0 100%);
+  border-color: #80a860;
+  color: #2d6a2d;
   font-size: 18px;
 }
 
 .status-lose {
-  background: linear-gradient(180deg, rgba(231,76,60,0.3) 0%, rgba(231,76,60,0.15) 100%);
-  border-color: rgba(231,76,60,0.3);
-  color: #f87171;
-  font-weight: bold;
+  background: linear-gradient(180deg, #f5d0c0 0%, #e8b8a0 100%);
+  border-color: #c08060;
+  color: #a03020;
   font-size: 18px;
 }
 
 .status-thinking {
-  color: #fbbf24;
+  color: #8b6914;
 }
 
 @keyframes pulse {
@@ -91,69 +90,70 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #fbbf24;
+  background: #c49a3f;
   margin-left: 8px;
   animation: pulse 1s infinite;
 }
 
-/* Game Container - 3D shadow frame */
+/* ============ Game Container - Wood Frame ============ */
 .game-container {
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow:
-    0 4px 6px rgba(0,0,0,0.3),
-    0 10px 30px rgba(0,0,0,0.4),
-    0 20px 60px rgba(0,0,0,0.2),
-    inset 0 0 0 1px rgba(255,255,255,0.05);
+    0 4px 8px rgba(90, 45, 12, 0.25),
+    0 8px 24px rgba(90, 45, 12, 0.15);
   overflow: hidden;
   width: 100%;
 }
 
-/* Controls Row */
+/* ============ Controls Row ============ */
 .controls-row {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-/* 3D Buttons */
+/* ============ Wood Buttons - Game Controls ============ */
 .game-controls {
   display: flex;
   gap: 8px;
 }
 
 .game-controls button {
-  padding: 9px 22px;
-  font-size: 15px;
-  border: none;
-  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 16px;
+  border: 1px solid #b08838;
+  border-radius: 12px;
   cursor: pointer;
-  background: linear-gradient(180deg, #f0d48a 0%, #d4a84e 50%, #c49a3f 100%);
-  color: #3d2200;
+  background: linear-gradient(180deg, #e8c373 0%, #d4a84e 40%, #c49a3f 100%);
+  color: #5a2d0c;
   font-weight: bold;
+  font-family: "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
   box-shadow:
     0 3px 0 #a07830,
-    0 4px 8px rgba(0,0,0,0.3);
+    0 4px 8px rgba(90, 45, 12, 0.3),
+    inset 0 1px 0 rgba(255,255,255,0.4);
   text-shadow: 0 1px 0 rgba(255,255,255,0.3);
   position: relative;
   top: 0;
 }
 
 .game-controls button:hover:not(:disabled) {
-  background: linear-gradient(180deg, #f5dfa0 0%, #e0b860 50%, #d0a548 100%);
+  background: linear-gradient(180deg, #f0d080 0%, #e0b860 40%, #d0a548 100%);
   top: -1px;
   box-shadow:
     0 4px 0 #a07830,
-    0 6px 12px rgba(0,0,0,0.35);
+    0 6px 12px rgba(90, 45, 12, 0.35),
+    inset 0 1px 0 rgba(255,255,255,0.5);
 }
 
 .game-controls button:active:not(:disabled) {
   top: 2px;
   box-shadow:
     0 1px 0 #a07830,
-    0 2px 4px rgba(0,0,0,0.25);
+    0 2px 4px rgba(90, 45, 12, 0.25);
 }
 
 .game-controls button:disabled {
@@ -161,56 +161,49 @@ body {
   cursor: not-allowed;
 }
 
-/* Auto-play button */
+/* ============ Auto-play Button ============ */
 .auto-play-btn {
-  padding: 9px 22px;
-  font-size: 15px;
-  border: none;
-  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 16px;
+  border: 1px solid #9a8a70;
+  border-radius: 12px;
   cursor: pointer;
-  background: linear-gradient(180deg, #7c8fa8 0%, #5a6d82 50%, #4d5f72 100%);
-  color: #e0e8f0;
+  background: linear-gradient(180deg, #c8b898 0%, #b0a080 40%, #9a8a70 100%);
+  color: #4a3820;
   font-weight: bold;
+  font-family: "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
   box-shadow:
-    0 3px 0 #3d4f60,
-    0 4px 8px rgba(0,0,0,0.3);
-  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    0 3px 0 #7a6a50,
+    0 4px 8px rgba(90, 45, 12, 0.25),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
   position: relative;
   top: 0;
 }
 
 .auto-play-btn:hover {
-  background: linear-gradient(180deg, #8fa0b5 0%, #6a7d92 50%, #5d6f82 100%);
+  background: linear-gradient(180deg, #d4c4a8 0%, #bca890 40%, #a89880 100%);
   top: -1px;
-  box-shadow:
-    0 4px 0 #3d4f60,
-    0 6px 12px rgba(0,0,0,0.35);
 }
 
 .auto-play-btn:active {
   top: 2px;
-  box-shadow:
-    0 1px 0 #3d4f60,
-    0 2px 4px rgba(0,0,0,0.25);
 }
 
 .auto-play-btn.auto-play-active {
-  background: linear-gradient(180deg, #e07050 0%, #c0503a 50%, #a84030 100%);
+  background: linear-gradient(180deg, #c0503a 0%, #a84030 40%, #903028 100%);
   color: #fff;
-  box-shadow:
-    0 3px 0 #7a2820,
-    0 4px 8px rgba(0,0,0,0.3);
+  border-color: #802820;
+  box-shadow: 0 3px 0 #602018, 0 4px 8px rgba(90, 30, 20, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .auto-play-btn.auto-play-active:hover {
-  background: linear-gradient(180deg, #e88070 0%, #d0604a 50%, #b85040 100%);
-  box-shadow:
-    0 4px 0 #7a2820,
-    0 6px 12px rgba(0,0,0,0.35);
+  background: linear-gradient(180deg, #d06048 0%, #b85040 40%, #a03830 100%);
 }
 
-/* Level Selectors */
+/* ============ Level Selectors ============ */
 .level-selectors {
   display: flex;
   flex-direction: column;
@@ -226,8 +219,8 @@ body {
 }
 
 .level-label {
-  font-size: 13px;
-  color: #8896a6;
+  font-size: 14px;
+  color: #7a5a30;
   font-weight: bold;
   white-space: nowrap;
 }
@@ -235,39 +228,36 @@ body {
 .level-buttons {
   display: flex;
   gap: 3px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.03) 100%);
   border-radius: 10px;
   padding: 3px;
-  box-shadow:
-    inset 0 2px 4px rgba(0,0,0,0.3),
-    0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: inset 0 2px 4px rgba(90, 45, 12, 0.12), 0 1px 0 rgba(255,255,255,0.5);
+  border: 1px solid rgba(90, 45, 12, 0.1);
 }
 
 .diff-btn {
-  padding: 6px 12px;
-  font-size: 12px;
+  padding: 6px 13px;
+  font-size: 13px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   background: transparent;
-  color: #8896a6;
+  color: #8a6a40;
   font-weight: bold;
+  font-family: "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
-  position: relative;
-  top: 0;
 }
 
 .diff-btn:hover:not(:disabled):not(.diff-active) {
-  color: #c8d6e5;
-  background: rgba(255,255,255,0.06);
+  color: #5a3000;
+  background: rgba(255,255,255,0.4);
 }
 
 .diff-btn.diff-active {
-  background: linear-gradient(180deg, #f0d48a 0%, #d4a84e 100%);
-  color: #3d2200;
-  box-shadow:
-    0 2px 0 #a07830,
-    0 2px 6px rgba(0,0,0,0.25);
+  background: linear-gradient(180deg, #e8c373 0%, #d4a84e 100%);
+  color: #5a2d0c;
+  border: 1px solid #b08838;
+  box-shadow: 0 2px 0 #a07830, 0 2px 6px rgba(90, 45, 12, 0.2);
   text-shadow: 0 1px 0 rgba(255,255,255,0.3);
 }
 
@@ -276,7 +266,7 @@ body {
   cursor: not-allowed;
 }
 
-/* Captured Pieces */
+/* ============ Captured Pieces ============ */
 .captured-pieces {
   display: flex;
   flex-direction: column;
@@ -293,7 +283,7 @@ body {
 }
 
 .captured-label {
-  color: #6b7b8d;
+  color: #8a6a40;
   white-space: nowrap;
 }
 
@@ -304,89 +294,119 @@ body {
 }
 
 .red-captured .captured-piece {
-  color: #4a4a5e;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  color: #6a5040;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.3);
 }
 
 .black-captured .captured-piece {
-  color: #e06060;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  color: #c04040;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.3);
 }
 
 .captured-piece {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: bold;
 }
 
 .no-captures {
-  color: #4a5568;
+  color: #a89070;
   font-style: italic;
 }
 
 .footer {
   margin-top: 4px;
   font-size: 12px;
-  color: rgba(255,255,255,0.25);
+  color: rgba(90, 45, 12, 0.3);
 }
 
-/* Mode Selector */
+/* ============ Mode Selector - Chinese Style Menu ============ */
 .mode-selector {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
-  padding-top: 60px;
+  gap: 30px;
+  padding-top: 50px;
+  width: 100%;
+}
+
+.mode-selector .title {
+  font-size: 38px;
+  letter-spacing: 8px;
+  position: relative;
+}
+
+.mode-selector .title::after {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #c49a3f, transparent);
+  margin: 8px auto 0;
 }
 
 .mode-buttons {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  width: 100%;
+  max-width: 320px;
 }
 
 .mode-btn {
-  padding: 14px 48px;
-  font-size: 18px;
-  border: none;
-  border-radius: 12px;
+  padding: 16px 48px;
+  font-size: 22px;
+  border: 2px solid #b08838;
+  border-radius: 16px;
   cursor: pointer;
-  background: linear-gradient(180deg, #f0d48a 0%, #d4a84e 50%, #c49a3f 100%);
-  color: #3d2200;
+  background: linear-gradient(180deg, #eedbb0 0%, #e0c890 30%, #d4b878 60%, #c8a860 100%);
+  color: #5a2d0c;
   font-weight: bold;
+  font-family: "KaiTi", "STKaiti", "FangSong", serif;
   transition: all 0.15s;
-  box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(0,0,0,0.3);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  box-shadow:
+    0 4px 0 #a07830,
+    0 6px 12px rgba(90, 45, 12, 0.25),
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -2px 4px rgba(90, 45, 12, 0.1);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
   position: relative;
   top: 0;
-  letter-spacing: 2px;
+  letter-spacing: 4px;
 }
 
 .mode-btn:hover {
-  background: linear-gradient(180deg, #f5dfa0 0%, #e0b860 50%, #d0a548 100%);
-  top: -1px;
-  box-shadow: 0 4px 0 #a07830, 0 6px 12px rgba(0,0,0,0.35);
+  background: linear-gradient(180deg, #f5e4c0 0%, #e8d0a0 30%, #dcc088 60%, #d0b070 100%);
+  top: -2px;
+  box-shadow:
+    0 6px 0 #a07830,
+    0 8px 16px rgba(90, 45, 12, 0.3),
+    inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
 .mode-btn:active {
   top: 2px;
-  box-shadow: 0 1px 0 #a07830, 0 2px 4px rgba(0,0,0,0.25);
+  box-shadow:
+    0 2px 0 #a07830,
+    0 3px 6px rgba(90, 45, 12, 0.2),
+    inset 0 2px 4px rgba(90, 45, 12, 0.15);
 }
 
-/* Lobby */
+/* ============ Lobby ============ */
 .lobby {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
   width: 100%;
   max-width: 400px;
 }
 
 .lobby h2 {
-  font-size: 24px;
-  color: #f0d48a;
-  text-shadow: 0 1px 0 #c9a84c, 0 2px 0 #b8973e;
-  letter-spacing: 3px;
+  font-size: 26px;
+  color: #5a2d0c;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  letter-spacing: 4px;
+  font-family: "KaiTi", "STKaiti", serif;
 }
 
 .lobby-section {
@@ -394,53 +414,58 @@ body {
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  padding: 16px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.25) 100%);
+  border-radius: 14px;
+  border: 1px solid rgba(180, 140, 80, 0.3);
+  box-shadow: 0 2px 6px rgba(90, 45, 12, 0.08);
 }
 
 .lobby-section h3 {
   font-size: 14px;
-  color: #8896a6;
-  margin-bottom: 4px;
+  color: #8a6a40;
+  font-family: "KaiTi", "STKaiti", serif;
+  margin-bottom: 2px;
 }
 
 .lobby-input {
   padding: 10px 14px;
   font-size: 15px;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 8px;
-  background: rgba(0,0,0,0.3);
-  color: #ecf0f1;
+  border: 1px solid #c4a878;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.6);
+  color: #4a2810;
   outline: none;
   transition: border-color 0.2s;
+  font-family: inherit;
 }
 
 .lobby-input:focus {
-  border-color: #f0d48a;
+  border-color: #d4a84e;
+  box-shadow: 0 0 0 2px rgba(212, 168, 78, 0.2);
 }
 
 .lobby-input::placeholder {
-  color: rgba(255,255,255,0.3);
+  color: rgba(90, 45, 12, 0.35);
 }
 
 .lobby-btn {
-  padding: 10px 20px;
-  font-size: 15px;
-  border: none;
-  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 16px;
+  border: 1px solid #b08838;
+  border-radius: 12px;
   cursor: pointer;
-  background: linear-gradient(180deg, #f0d48a 0%, #d4a84e 50%, #c49a3f 100%);
-  color: #3d2200;
+  background: linear-gradient(180deg, #e8c373 0%, #d4a84e 40%, #c49a3f 100%);
+  color: #5a2d0c;
   font-weight: bold;
+  font-family: "KaiTi", "STKaiti", serif;
   transition: all 0.15s;
-  box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(90, 45, 12, 0.2), inset 0 1px 0 rgba(255,255,255,0.4);
   text-shadow: 0 1px 0 rgba(255,255,255,0.3);
 }
 
 .lobby-btn:hover {
-  background: linear-gradient(180deg, #f5dfa0 0%, #e0b860 50%, #d0a548 100%);
+  background: linear-gradient(180deg, #f0d080 0%, #e0b860 40%, #d0a548 100%);
 }
 
 .lobby-btn:disabled {
@@ -449,16 +474,19 @@ body {
 }
 
 .lobby-btn.secondary {
-  background: linear-gradient(180deg, #7c8fa8 0%, #5a6d82 50%, #4d5f72 100%);
-  color: #e0e8f0;
-  box-shadow: 0 3px 0 #3d4f60, 0 4px 8px rgba(0,0,0,0.3);
-  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+  background: linear-gradient(180deg, #c8b898 0%, #b0a080 40%, #9a8a70 100%);
+  color: #4a3820;
+  border-color: #9a8a70;
+  box-shadow: 0 3px 0 #7a6a50, 0 4px 8px rgba(90, 45, 12, 0.15), inset 0 1px 0 rgba(255,255,255,0.3);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
 }
 
 .lobby-btn.danger {
-  background: linear-gradient(180deg, #e07050 0%, #c0503a 50%, #a84030 100%);
+  background: linear-gradient(180deg, #c0503a 0%, #a84030 40%, #903028 100%);
   color: #fff;
-  box-shadow: 0 3px 0 #7a2820, 0 4px 8px rgba(0,0,0,0.3);
+  border-color: #802820;
+  box-shadow: 0 3px 0 #602018, 0 4px 8px rgba(90, 30, 20, 0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .join-row {
@@ -478,37 +506,40 @@ body {
   font-size: 32px;
   font-weight: bold;
   letter-spacing: 8px;
-  color: #f0d48a;
+  color: #5a2d0c;
   text-align: center;
   padding: 16px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 12px;
-  border: 1px solid rgba(240,212,138,0.3);
+  background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.3) 100%);
+  border-radius: 14px;
+  border: 2px dashed #c49a3f;
   cursor: pointer;
   transition: background 0.2s;
+  font-family: monospace;
 }
 
 .room-code-display:hover {
-  background: rgba(0,0,0,0.4);
+  background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.4) 100%);
 }
 
 .waiting-text {
-  color: #fbbf24;
+  color: #8b6914;
   text-align: center;
   font-size: 16px;
+  font-weight: bold;
   animation: pulse 1.5s infinite;
 }
 
 .error-message {
-  color: #f87171;
+  color: #a03020;
   font-size: 14px;
   text-align: center;
-  padding: 8px;
-  background: rgba(231,76,60,0.15);
-  border-radius: 8px;
+  padding: 8px 12px;
+  background: rgba(192, 80, 58, 0.1);
+  border: 1px solid rgba(192, 80, 58, 0.25);
+  border-radius: 10px;
 }
 
-/* Online Game */
+/* ============ Online Game ============ */
 .online-game-actions {
   display: flex;
   gap: 8px;
@@ -521,21 +552,23 @@ body {
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  background: rgba(251,191,36,0.15);
-  border: 1px solid rgba(251,191,36,0.3);
-  border-radius: 10px;
-  color: #fbbf24;
+  background: linear-gradient(180deg, #f8eac0 0%, #f0dca8 100%);
+  border: 1px solid #d4b060;
+  border-radius: 12px;
+  color: #7a5a10;
   font-size: 14px;
+  font-weight: bold;
 }
 
 .disconnect-warning {
   padding: 10px 16px;
-  background: rgba(231,76,60,0.15);
-  border: 1px solid rgba(231,76,60,0.3);
-  border-radius: 10px;
-  color: #f87171;
+  background: rgba(192, 80, 58, 0.1);
+  border: 1px solid rgba(192, 80, 58, 0.25);
+  border-radius: 12px;
+  color: #a03020;
   font-size: 14px;
   text-align: center;
+  font-weight: bold;
 }
 
 .game-over-overlay {
@@ -544,7 +577,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(60, 30, 10, 0.75);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -554,24 +587,26 @@ body {
 }
 
 .game-over-result {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  font-family: "KaiTi", "STKaiti", serif;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  letter-spacing: 4px;
 }
 
 .result-win {
-  color: #4ade80;
+  color: #90e090;
 }
 
 .result-lose {
-  color: #f87171;
+  color: #f08080;
 }
 
 .result-draw {
-  color: #fbbf24;
+  color: #f0d080;
 }
 
-/* Chat Panel */
+/* ============ Chat Panel ============ */
 .chat-panel {
   width: 100%;
 }
@@ -579,17 +614,18 @@ body {
 .chat-toggle {
   padding: 6px 14px;
   font-size: 13px;
-  border: none;
+  border: 1px solid rgba(180, 140, 80, 0.3);
   border-radius: 8px;
   cursor: pointer;
-  background: rgba(255,255,255,0.08);
-  color: #8896a6;
+  background: rgba(255,255,255,0.3);
+  color: #8a6a40;
+  font-family: inherit;
   transition: all 0.15s;
 }
 
 .chat-toggle:hover {
-  background: rgba(255,255,255,0.12);
-  color: #c8d6e5;
+  background: rgba(255,255,255,0.5);
+  color: #5a3000;
 }
 
 .chat-messages {
@@ -599,19 +635,20 @@ body {
   flex-direction: column;
   gap: 4px;
   padding: 10px;
-  background: rgba(0,0,0,0.2);
-  border-radius: 8px;
+  background: rgba(255,255,255,0.3);
+  border: 1px solid rgba(180, 140, 80, 0.2);
+  border-radius: 10px;
   margin-top: 8px;
 }
 
 .chat-message {
   font-size: 13px;
-  color: #c8d6e5;
+  color: #4a2810;
   word-break: break-word;
 }
 
 .chat-sender {
-  color: #f0d48a;
+  color: #a06020;
   font-weight: bold;
 }
 
@@ -625,72 +662,54 @@ body {
   flex: 1;
   padding: 8px 12px;
   font-size: 13px;
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid #c4a878;
   border-radius: 8px;
-  background: rgba(0,0,0,0.3);
-  color: #ecf0f1;
+  background: rgba(255,255,255,0.6);
+  color: #4a2810;
   outline: none;
+  font-family: inherit;
 }
 
 .chat-input-row button {
   padding: 8px 14px;
   font-size: 13px;
-  border: none;
+  border: 1px solid #b08838;
   border-radius: 8px;
   cursor: pointer;
-  background: #f0d48a;
-  color: #3d2200;
+  background: linear-gradient(180deg, #e8c373 0%, #d4a84e 100%);
+  color: #5a2d0c;
   font-weight: bold;
+  font-family: inherit;
 }
 
 .chat-empty {
-  color: #4a5568;
+  color: #a89070;
   font-style: italic;
   font-size: 13px;
   text-align: center;
 }
 
-/* Online game status */
+/* ============ Online Game Status ============ */
 .online-status {
   font-size: 16px;
-  padding: 7px 18px;
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
-  border: 1px solid rgba(255,255,255,0.08);
+  padding: 8px 24px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #f0dbb5 0%, #e5cc9a 100%);
+  border: 1px solid #c9a86c;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.1);
+  font-weight: bold;
 }
 
 .online-status .my-turn {
-  color: #4ade80;
+  color: #2d6a2d;
 }
 
 .online-status .opponent-turn {
-  color: #fbbf24;
+  color: #8b6914;
 }
 
-/* Desktop */
-@media (min-width: 600px) {
-  #root {
-    align-items: center;
-    padding: 20px;
-  }
-
-  .title {
-    font-size: 30px;
-  }
-
-  .game-status {
-    font-size: 18px;
-    padding: 8px 22px;
-  }
-
-  .app {
-    gap: 16px;
-  }
-}
-
-/* Game Records */
+/* ============ Game Records ============ */
 .game-records {
   display: flex;
   flex-direction: column;
@@ -700,10 +719,11 @@ body {
 }
 
 .game-records h2 {
-  font-size: 24px;
-  color: #f0d48a;
-  text-shadow: 0 1px 0 #c9a84c, 0 2px 0 #b8973e;
-  letter-spacing: 3px;
+  font-size: 26px;
+  color: #5a2d0c;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  letter-spacing: 4px;
+  font-family: "KaiTi", "STKaiti", serif;
 }
 
 .records-list {
@@ -718,41 +738,41 @@ body {
   flex-direction: column;
   gap: 6px;
   padding: 12px 16px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.3) 100%);
+  border: 1px solid rgba(180, 140, 80, 0.3);
+  border-radius: 12px;
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .record-item:hover {
-  background: rgba(255,255,255,0.1);
+  background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.45) 100%);
 }
 
 .record-players {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: bold;
 }
 
-.record-red { color: #e06060; }
-.record-black { color: #4a4a5e; }
-.record-vs { color: #6b7b8d; font-size: 12px; }
+.record-red { color: #b03020; }
+.record-black { color: #3a3a50; }
+.record-vs { color: #a89070; font-size: 12px; }
 
 .record-info {
   display: flex;
   gap: 12px;
   font-size: 13px;
-  color: #8896a6;
+  color: #8a6a40;
 }
 
-.result-red { color: #e06060; font-weight: bold; }
-.result-black { color: #8896a6; font-weight: bold; }
-.result-draw-text { color: #fbbf24; font-weight: bold; }
+.result-red { color: #b03020; font-weight: bold; }
+.result-black { color: #3a3a50; font-weight: bold; }
+.result-draw-text { color: #8b6914; font-weight: bold; }
 
-/* Game Replay */
+/* ============ Game Replay ============ */
 .game-replay {
   display: flex;
   flex-direction: column;
@@ -762,10 +782,11 @@ body {
 }
 
 .game-replay h2 {
-  font-size: 24px;
-  color: #f0d48a;
-  text-shadow: 0 1px 0 #c9a84c, 0 2px 0 #b8973e;
-  letter-spacing: 3px;
+  font-size: 26px;
+  color: #5a2d0c;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  letter-spacing: 4px;
+  font-family: "KaiTi", "STKaiti", serif;
 }
 
 .replay-info {
@@ -777,13 +798,13 @@ body {
 }
 
 .replay-result {
-  color: #fbbf24;
+  color: #8b6914;
   margin-left: 8px;
 }
 
 .replay-progress {
   font-size: 14px;
-  color: #8896a6;
+  color: #8a6a40;
 }
 
 .replay-controls {
@@ -792,27 +813,52 @@ body {
 }
 
 .replay-btn {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   font-size: 18px;
-  border: none;
-  border-radius: 10px;
+  border: 1px solid #b08838;
+  border-radius: 12px;
   cursor: pointer;
-  background: linear-gradient(180deg, #f0d48a 0%, #d4a84e 50%, #c49a3f 100%);
-  color: #3d2200;
+  background: linear-gradient(180deg, #e8c373 0%, #d4a84e 40%, #c49a3f 100%);
+  color: #5a2d0c;
   font-weight: bold;
   transition: all 0.15s;
-  box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 3px 0 #a07830, 0 4px 8px rgba(90, 45, 12, 0.2), inset 0 1px 0 rgba(255,255,255,0.4);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .replay-btn:hover:not(:disabled) {
-  background: linear-gradient(180deg, #f5dfa0 0%, #e0b860 50%, #d0a548 100%);
+  background: linear-gradient(180deg, #f0d080 0%, #e0b860 40%, #d0a548 100%);
 }
 
 .replay-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* ============ Desktop ============ */
+@media (min-width: 600px) {
+  #root {
+    align-items: center;
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 36px;
+  }
+
+  .mode-selector .title {
+    font-size: 42px;
+  }
+
+  .game-status {
+    font-size: 18px;
+    padding: 8px 28px;
+  }
+
+  .app {
+    gap: 14px;
+  }
 }

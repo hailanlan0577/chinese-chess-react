@@ -118,7 +118,7 @@ export default function OnlineGame({ socket, onBack }: OnlineGameProps) {
           <div className={`game-over-result ${getResultClass(online.gameResult.result, online.myColor)}`}>
             {getResultText(online.gameResult.result, online.myColor)}
           </div>
-          <div style={{ color: '#8896a6', fontSize: 14 }}>
+          <div style={{ color: '#d4c0a0', fontSize: 14 }}>
             {online.gameResult.reason}
           </div>
           <button className="lobby-btn" onClick={handleBackToLobby}>

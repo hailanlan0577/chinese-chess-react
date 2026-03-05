@@ -199,8 +199,10 @@ export function handleConnection(io: IO, socket: ClientSocket) {
 
   // ---- AI (Pikafish) ----
   socket.on('ai:request', async ({ board, side, level }, cb) => {
+    console.log(`[AI] 收到请求: side=${side}, level=${level}`);
     try {
       const fen = boardToFen(board, side);
+      console.log(`[AI] FEN: ${fen}`);
       const uciMove = await pikafishPool.getBestMove(fen, level);
       if (!uciMove) {
         cb({ ok: false, error: 'Pikafish 无法计算走法' });
@@ -211,8 +213,10 @@ export function handleConnection(io: IO, socket: ClientSocket) {
         cb({ ok: false, error: `无法解析 UCI 走法: ${uciMove}` });
         return;
       }
+      console.log(`[AI] 返回走法: ${uciMove}`);
       cb({ ok: true, bestMove: move });
     } catch (err) {
+      console.error(`[AI] 出错:`, err);
       cb({ ok: false, error: `AI 计算出错: ${err}` });
     }
   });

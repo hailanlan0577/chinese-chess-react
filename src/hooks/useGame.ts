@@ -13,7 +13,7 @@ import { playSelect, playMove, playCapture, playCheck, playGameOver, speakMove }
 import { saveRecord } from './useLocalRecords';
 import type { MovePayload } from '../network/protocol';
 import type { LocalGameRecord } from './useLocalRecords';
-import { getSocket } from '../network/socket';
+import { getSocket, connectSocket } from '../network/socket';
 
 export type Level = 'easy' | 'medium' | 'hard' | 'insane';
 
@@ -59,6 +59,10 @@ export function useGame() {
 
   useEffect(() => {
     aiRef.current = new AIPlayer();
+    // 主动连接服务器，用于 Pikafish AI
+    const socket = connectSocket();
+    socket.on('connect', () => console.log('[AI] 已连接服务器，使用 Pikafish'));
+    socket.on('connect_error', () => console.log('[AI] 服务器连接失败，使用本地 AI'));
     return () => {
       aiRef.current?.terminate();
     };

@@ -36,6 +36,7 @@ export function useGame() {
   const [selectedPos, setSelectedPos] = useState<Position | null>(null);
   const [legalMoves, setLegalMoves] = useState<Move[]>([]);
   const [isAIThinking, setIsAIThinking] = useState(false);
+  const [aiEngine, setAiEngine] = useState<'pikafish' | 'local'>('local');
   const [pendingAnimation, setPendingAnimation] = useState<Move | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -103,10 +104,12 @@ export function useGame() {
       const socket = getSocket();
       let aiMove: Move | null;
       if (socket.connected) {
+        setAiEngine('pikafish');
         aiMove = await aiRef.current.findBestMoveRemote(
           state.board, side, level, socket, timeLimit, state.moveHistory
         );
       } else {
+        setAiEngine('local');
         aiMove = await aiRef.current.findBestMove(state.board, side, timeLimit, state.moveHistory);
       }
       if (aiMove) {
@@ -311,5 +314,6 @@ export function useGame() {
     setBlackLevel,
     redAutoPlay,
     toggleRedAutoPlay,
+    aiEngine,
   };
 }

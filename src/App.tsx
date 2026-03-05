@@ -69,6 +69,7 @@ function App() {
     setBlackLevel,
     redAutoPlay,
     toggleRedAutoPlay,
+    aiEngine,
   } = useGame();
 
   // Connect socket when entering online or records mode
@@ -129,6 +130,7 @@ function App() {
         isInCheck={gameState.isInCheck}
         isAIThinking={isAIThinking}
         redAutoPlay={redAutoPlay}
+        aiEngine={aiEngine}
       />
       <div className="game-container">
         <GameBoard

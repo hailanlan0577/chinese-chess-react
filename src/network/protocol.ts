@@ -1,4 +1,4 @@
-import type { Position } from '../engine/types';
+import type { Position, Board, Side, Move } from '../engine/types';
 
 // Lightweight move payload (no Piece object, server rebuilds from board)
 export interface MovePayload {
@@ -55,6 +55,7 @@ export interface ClientToServerEvents {
   'records:list': (cb: (res: { records: GameRecordSummary[] }) => void) => void;
   'records:detail': (data: { id: string }, cb: (res: GameRecordDetail | null) => void) => void;
   'reconnect:attempt': (data: { roomId: string; playerId: string }) => void;
+  'ai:request': (data: { board: Board; side: Side; level: string }, cb: (res: { ok: true; bestMove: Move } | { ok: false; error: string }) => void) => void;
 }
 
 // ---- Server -> Client ----

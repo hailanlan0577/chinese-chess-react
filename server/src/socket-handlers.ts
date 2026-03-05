@@ -6,6 +6,8 @@ import { gameSessionManager } from './game-session.js';
 import { matchmakingQueue } from './matchmaking.js';
 import { saveRecord, listRecords, getRecord } from './records.js';
 import { nanoid } from 'nanoid';
+import { boardToFen, uciMoveToMove } from './fen-converter.js';
+import { pikafishPool } from './pikafish.js';
 
 type IO = Server<ClientToServerEvents, ServerToClientEvents>;
 type ClientSocket = Socket<ClientToServerEvents, ServerToClientEvents>;
@@ -193,6 +195,26 @@ export function handleConnection(io: IO, socket: ClientSocket) {
 
   socket.on('records:detail', ({ id }, cb) => {
     cb(getRecord(id));
+  });
+
+  // ---- AI (Pikafish) ----
+  socket.on('ai:request', async ({ board, side, level }, cb) => {
+    try {
+      const fen = boardToFen(board, side);
+      const uciMove = await pikafishPool.getBestMove(fen, level);
+      if (!uciMove) {
+        cb({ ok: false, error: 'Pikafish 无法计算走法' });
+        return;
+      }
+      const move = uciMoveToMove(uciMove, board);
+      if (!move) {
+        cb({ ok: false, error: `无法解析 UCI 走法: ${uciMove}` });
+        return;
+      }
+      cb({ ok: true, bestMove: move });
+    } catch (err) {
+      cb({ ok: false, error: `AI 计算出错: ${err}` });
+    }
   });
 
   // ---- Reconnect ----

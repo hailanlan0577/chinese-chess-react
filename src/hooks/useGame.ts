@@ -13,6 +13,7 @@ import { playSelect, playMove, playCapture, playCheck, playGameOver, speakMove }
 import { saveRecord } from './useLocalRecords';
 import type { MovePayload } from '../network/protocol';
 import type { LocalGameRecord } from './useLocalRecords';
+import { getSocket } from '../network/socket';
 
 export type Level = 'easy' | 'medium' | 'hard' | 'insane';
 
@@ -94,7 +95,16 @@ export function useGame() {
 
     setIsAIThinking(true);
     try {
-      const aiMove = await aiRef.current.findBestMove(state.board, side, timeLimit, state.moveHistory);
+      // 智能切换：有网络连接用 Pikafish，否则用本地 JS AI
+      const socket = getSocket();
+      let aiMove: Move | null;
+      if (socket.connected) {
+        aiMove = await aiRef.current.findBestMoveRemote(
+          state.board, side, level, socket, timeLimit, state.moveHistory
+        );
+      } else {
+        aiMove = await aiRef.current.findBestMove(state.board, side, timeLimit, state.moveHistory);
+      }
       if (aiMove) {
         const nextState = makeMove(state, aiMove);
         if (nextState) {

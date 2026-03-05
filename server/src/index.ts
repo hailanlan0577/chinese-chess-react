@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { handleConnection } from './socket-handlers.js';
+import { pikafishPool } from './pikafish.js';
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,13 @@ const io = new Server(httpServer, {
 io.on('connection', (socket) => handleConnection(io, socket));
 
 const PORT = process.env.PORT || 3001;
-httpServer.listen(PORT, () => console.log(`Server on :${PORT}`));
+httpServer.listen(PORT, async () => {
+  console.log(`Server on :${PORT}`);
+  try {
+    await pikafishPool.init();
+  } catch (err) {
+    console.warn('Pikafish init failed (AI unavailable):', err);
+  }
+});
 
 export { io };
